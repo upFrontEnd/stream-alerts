@@ -47,9 +47,11 @@
       <input class="field" id="pseudo" placeholder="Pseudo à afficher" aria-label="Pseudo à afficher">
       <button class="btn" id="bg">Fond : cockpit</button>
       <button class="btn" id="snd" aria-pressed="true">Son : activé</button>
+      <button class="btn" id="dev" aria-pressed="false">Mode dev : désactivé</button>
     </div>
     <p class="hint">
       Source navigateur dans OBS, URL suivie de <code>?clean=1</code> : fond transparent, panneau masqué. Taille conseillée 820 × 270.
+      URL suivie de <code>?dev=1</code>, ou bouton « Mode dev » : alerte figée sans animation, pour valider le rendu avant d'ajuster la charte.
       Déclenchement depuis ton code : <code>Alerts.push({ type:'sub', user:'Nom', tier:2, months:14 })</code>.
     </p>
   </div>

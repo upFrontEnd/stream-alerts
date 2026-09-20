@@ -82,10 +82,17 @@ import './styles/main.scss';
 
   /* --- file d'attente ------------------------------------------ */
   var queue = [], busy = false, timers = [];
+  var devMode = /[?&]dev=1/.test(location.search);
   function clearTimers(){ timers.forEach(clearTimeout); timers = []; }
 
   function push(evt){
     if (!evt || !TYPES[evt.type]) return;
+    if (devMode){
+      queue = [];
+      clearTimers();
+      show(evt);
+      return;
+    }
     queue.push(evt);
     if (!busy) next();
   }
@@ -112,9 +119,10 @@ import './styles/main.scss';
     bug.classList.remove('is-in','is-out');
     void bug.offsetWidth;
     bug.classList.add('is-live','is-in');
-    chime(evt.type);
+    if (!devMode) chime(evt.type);
 
     clearTimers();
+    if (devMode) return; /* alerte figée : pas de sortie auto, next() ne joue pas la file */
     timers.push(setTimeout(function(){
       bug.classList.remove('is-in');
       bug.classList.add('is-out');
@@ -199,6 +207,20 @@ import './styles/main.scss';
     sndBtn.setAttribute('aria-pressed', String(soundOn));
     sndBtn.textContent = 'Son : ' + (soundOn ? 'activ\u00E9' : 'coup\u00E9');
   });
+
+  var devBtn = document.getElementById('dev');
+  function setDevMode(on){
+    devMode = on;
+    document.documentElement.dataset.dev = devMode ? '1' : '0';
+    devBtn.setAttribute('aria-pressed', String(devMode));
+    devBtn.textContent = 'Mode dev : ' + (devMode ? 'activ\u00E9' : 'd\u00E9sactiv\u00E9');
+    clearTimers();
+    queue = [];
+    busy = false;
+    if (!devMode) bug.classList.remove('is-live','is-in','is-out');
+  }
+  devBtn.addEventListener('click', function(){ setDevMode(!devMode); });
+  if (devMode) setDevMode(true);
 
   if (/[?&]clean=1/.test(location.search)){
     document.documentElement.dataset.mode = 'clean';

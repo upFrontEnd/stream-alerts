@@ -29,6 +29,14 @@ ou forcer le mode propre en remplaçant `data-mode="demo"` par `data-mode="clean
 sur la balise `<html>`.
 Taille conseillée : 820 × 270.
 
+## Mode dev
+
+URL suivie de `?dev=1`, ou bouton « Mode dev » du panneau : l'alerte apparaît
+instantanément, figée, sans aucune animation (bandeau, volets, balayage,
+ligne de piste), et reste affichée jusqu'au prochain déclenchement au lieu
+de disparaître après `hold`. Sert à valider le rendu statique (couleurs,
+textes, mise en page) avant de donner des instructions de retouche précises.
+
 ## Personnaliser
 
 Deux points d'entrée, tous les deux marqués `CHARTE` dans le code.

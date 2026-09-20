@@ -307,6 +307,42 @@ html[data-mode="clean"] body{background:transparent}
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 }
 
+/* ------------------------------------------------------------------
+   Mode dev — gèle l'alerte, aucune animation, pour valider le rendu
+   statique avant de préciser des instructions de charte/copy.
+------------------------------------------------------------------ */
+html[data-dev="1"] .bug.is-in .bug__mark,
+html[data-dev="1"] .bug.is-in .bug__body,
+html[data-dev="1"] .bug.is-out .bug__mark,
+html[data-dev="1"] .bug.is-out .bug__body{
+  animation:none !important;
+  clip-path:none !important;
+  transform:skewX(calc(var(--skew) * -1));
+}
+html[data-dev="1"] .bug.is-in .bug__name .ch{
+  animation:none !important;
+  transform:none;
+  color:inherit;
+}
+html[data-dev="1"] .bug.is-in .bug__line,
+html[data-dev="1"] .bug.is-in .bug__tag{
+  animation:none !important;
+  opacity:1;
+  transform:skewX(calc(var(--skew) * -1));
+}
+html[data-dev="1"] .bug__body::after{
+  animation:none !important;
+  opacity:0 !important;
+}
+html[data-dev="1"] .bug__life{
+  animation:none !important;
+  scale:1 1;
+}
+html[data-dev="1"] .bug__life i{
+  animation:none !important;
+  transform:scaleX(1);
+}
+
 /* ==================================================================
    Aperçu + panneau (absents en mode OBS)
 ================================================================== */
