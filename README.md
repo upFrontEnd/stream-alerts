@@ -44,20 +44,29 @@ Deux points d'entrée, tous les deux marqués `CHARTE` dans le code.
 **Couleurs** dans `src/styles/main.scss`, sur le sélecteur `.bug` :
 
 ```css
---hull-900: #04121c;  /* fond du bandeau */
+--hull-900: #04121c;  /* fond du bloc gauche (bug__mark) */
 --hull-700: #0b2438;
 --hull-500: #12384f;
---paper:    #eef6fb;  /* texte principal */
---dim:      #7fa3ba;  /* texte secondaire */
---accent:   #ffb020;  /* couleur maison */
+--ink:      #101a24;  /* texte principal, bandeau blanc */
+--dim:      #51606d;  /* texte secondaire */
+--accent:   #ffb020;  /* couleur maison (bloc gauche + liseré) */
 --accent-ink:#1a0f00; /* texte sur la couleur maison */
 --skew:     0deg;     /* -8deg pour la version inclinée */
 ```
 
-Une couleur d'accent par type juste en dessous, sur `.bug[data-type="..."]`.
+Deux couleurs par type juste en dessous, sur `.bug[data-type="..."]` : `--accent`
+(couleur maison, bloc gauche) et `--name` (couleur du pseudo, `bug__name`) :
+
+| Type (clé) | Libellé | `--name` |
+| --- | --- | --- |
+| `follow` | FOLLOWER | `#009fe3` |
+| `sub` | SUB | `#00b132` |
+| `gift` | HOST | `#5e008a` |
+| `bits` | DONS | `#db4798` |
+| `raid` | RAID | `#ff9000` |
 
 **Textes et codes** dans `src/main.js`, objet `TYPES`. Chaque type définit
-`code` (3 ou 4 lettres du bloc gauche), `figure`, `unit`, `line`, `tag` et `hold`
+`code` (3 ou 4 lettres du bloc gauche), `figure`, `unit`, `line` et `hold`
 (durée d'affichage en ms).
 
 **Son** dans `src/main.js`, objet `MOTIF` : une liste de fréquences par type,
@@ -96,7 +105,7 @@ Dans `src/styles/main.scss`, sous le commentaire `Séquence`. L'ordre et les dé
 3. `markWipe` 230 ms à 320 ms, le bloc chiffre se découpe
 4. `flap` par caractère à 380 ms, décalage de 28 ms, les volets tombent
 5. `sheen` 660 ms à 440 ms, le balayage lumineux
-6. `riseIn` 320 ms à 560 ms, la phrase et le tag
+6. `riseIn` 320 ms à 560 ms, la phrase (`bug__line`)
 7. `lifeDrain` sur toute la durée `--hold`
 
 La sortie inverse les découpes. `prefers-reduced-motion` remplace le tout par un fondu.

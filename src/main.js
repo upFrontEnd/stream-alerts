@@ -10,7 +10,6 @@ import './styles/main.scss';
   var nameEl = document.getElementById('name');
   var lineEl = document.getElementById('line');
   var noteEl = document.getElementById('note');
-  var tagEl  = document.getElementById('tag');
 
   function pad(n){ n = Number(n) || 0; return n < 10 ? '0' + n : String(n); }
 
@@ -21,7 +20,6 @@ import './styles/main.scss';
     follow:{
       code:'ARR', figure:function(){ return '01'; }, unit:function(){ return 'pax'; },
       line:function(){ return 'monte \u00E0 bord'; },
-      tag:function(){ return 'NOUVEAU'; },
       hold:4200
     },
     sub:{
@@ -31,7 +29,6 @@ import './styles/main.scss';
         return m > 1 ? 'embarque pour le ' + m + 'e mois d\u2019affil\u00E9e'
                      : 'prend sa place \u00E0 bord pour la premi\u00E8re fois';
       },
-      tag:function(e){ return e.prime ? 'PRIME' : ''; },
       hold:5200
     },
     gift:{
@@ -41,19 +38,16 @@ import './styles/main.scss';
         var c = e.count || 1;
         return 'offre ' + c + ' place' + (c > 1 ? 's' : '') + ' \u00E0 l\u2019\u00E9quipage';
       },
-      tag:function(e){ return e.tier ? 'TIER ' + e.tier : ''; },
       hold:5400
     },
     bits:{
       code:'FUEL', figure:function(e){ return e.amount || 100; }, unit:function(){ return 'bits'; },
       line:function(){ return 'fait le plein de kérosène'; },
-      tag:function(){ return ''; },
       hold:5000
     },
     raid:{
       code:'FMN', figure:function(e){ return e.viewers || 10; }, unit:function(){ return 'pax'; },
       line:function(){ return 'arrive en formation'; },
-      tag:function(){ return 'RAID'; },
       hold:5400
     }
   };
@@ -112,7 +106,6 @@ import './styles/main.scss';
     figure.textContent = cfg.figure(evt);
     unit.textContent   = cfg.unit(evt);
     lineEl.textContent = cfg.line(evt);
-    tagEl.textContent  = cfg.tag(evt);
     noteEl.textContent = evt.message || '';
     setName(evt.user || 'anonyme');
 
