@@ -52,25 +52,28 @@ html[data-mode="clean"] body{background:transparent}
   --ink:#101a24;             /* texte sur le coupon blanc */
   --dim:#51606d;
 
-  --accent:#ffb020;          /* couleur d'origine, ne sert plus qu'au flash du volet nom */
-  --hold:4200ms;
-
   position:relative;
   display:flex;
   align-items:stretch;
   width:min(780px,94vw);
   visibility:hidden;
   border-radius:10px;
+  opacity:0;
+  transform:translateY(14px) scale(.97);
   filter:drop-shadow(0 10px 26px rgba(0,10,20,.5));
+  transition:opacity .38s cubic-bezier(.22,.85,.32,1),
+             transform .38s cubic-bezier(.22,.85,.32,1);
 }
 .bug.is-live{visibility:visible}
+.bug.is-in{opacity:1;transform:translateY(0) scale(1)}
+.bug.is-out{opacity:0;transform:translateY(-10px) scale(.97)}
 
-/* couleur maison par type : bande, souche, pseudo (--name) + flash du volet nom (--accent) */
-.bug[data-type="follow"]{--accent:#2fe08f;--name:#009fe3} /* FOLLOWER */
-.bug[data-type="sub"]   {--accent:#ffb020;--name:#00b132} /* SUB */
-.bug[data-type="gift"]  {--accent:#ff5fc0;--name:#5e008a} /* HOST */
-.bug[data-type="bits"]  {--accent:#4fc9ff;--name:#db4798} /* DONS */
-.bug[data-type="raid"]  {--accent:#ff6a42;--name:#ff9000} /* RAID */
+/* couleur maison par type : bande, souche, pseudo */
+.bug[data-type="follow"]{--name:#009fe3} /* FOLLOWER */
+.bug[data-type="sub"]   {--name:#00b132} /* SUB */
+.bug[data-type="gift"]  {--name:#5e008a} /* HOST */
+.bug[data-type="bits"]  {--name:#db4798} /* DONS */
+.bug[data-type="raid"]  {--name:#ff9000} /* RAID */
 
 /* ------------------------------------------------------------------
    Bande de couleur, bord gauche
@@ -80,7 +83,6 @@ html[data-mode="clean"] body{background:transparent}
   width:10px;
   background:var(--name);
   border-radius:10px 0 0 10px;
-  transform-origin:top;
 }
 
 /* ------------------------------------------------------------------
@@ -212,49 +214,21 @@ html[data-mode="clean"] body{background:transparent}
 }
 
 /* ------------------------------------------------------------------
-   Ligne médiane de piste = temps restant
+   Séquence — la carte entre/sort d'un seul mouvement fluide (voir la
+   transition sur .bug ci-dessus) ; ces détails suivent en douceur.
 ------------------------------------------------------------------ */
-.bug__life{
-  position:absolute;
-  left:0;right:0;bottom:-7px;
-  height:5px;
-  transform-origin:bottom left;
-  scale:0 1;
-  background:rgba(120,170,200,.16);
-}
-.bug__life i{
-  display:block;
-  height:100%;
-  width:100%;
-  transform-origin:left;
-  background:repeating-linear-gradient(90deg,var(--name) 0 22px,transparent 22px 34px);
-}
+.bug.is-in .bug__coupon::after{animation:sheen 660ms ease-out 160ms forwards}
+.bug.is-in .bug__name .ch{animation:flap 380ms cubic-bezier(.2,.85,.25,1) backwards;animation-delay:calc(120ms + var(--i) * 26ms)}
+.bug.is-in .bug__line{animation:riseIn 300ms cubic-bezier(.2,.8,.25,1) 300ms backwards}
 
-/* ------------------------------------------------------------------
-   Séquence
------------------------------------------------------------------- */
-.bug.is-in .bug__life{animation:lifeDraw 170ms cubic-bezier(.2,.7,.3,1) forwards}
-.bug.is-in .bug__life i{animation:lifeDrain var(--hold) linear 520ms forwards}
-.bug.is-in .bug__accent{animation:accentDraw 170ms cubic-bezier(.2,.7,.3,1) forwards}
-.bug.is-in .bug__coupon{animation:shutter 280ms cubic-bezier(.16,.9,.24,1) 130ms forwards}
-.bug.is-in .bug__stub{animation:wipeIn 230ms cubic-bezier(.16,.9,.24,1) 320ms forwards}
-.bug.is-in .bug__coupon::after{animation:sheen 660ms ease-out 440ms forwards}
-.bug.is-in .bug__name .ch{animation:flap 400ms cubic-bezier(.2,.85,.25,1) backwards;animation-delay:calc(380ms + var(--i) * 28ms)}
-.bug.is-in .bug__line{animation:riseIn 320ms cubic-bezier(.2,.8,.25,1) 560ms backwards}
-
-@keyframes accentDraw{from{transform:scaleY(0)}to{transform:scaleY(1)}}
-@keyframes wipeIn{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
-@keyframes shutter{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
-@keyframes lifeDraw{from{scale:0 1}to{scale:1 1}}
-@keyframes lifeDrain{from{transform:scaleX(1)}to{transform:scaleX(0)}}
 @keyframes sheen{
   0%{opacity:0;transform:translateX(0)}
   15%{opacity:1}
   100%{opacity:0;transform:translateX(500%)}
 }
 @keyframes flap{
-  0%{transform:rotateX(-94deg);color:var(--accent)}
-  52%{color:var(--accent)}
+  0%{transform:rotateX(-94deg);color:#333}
+  52%{color:#333}
   100%{transform:rotateX(0);color:inherit}
 }
 @keyframes riseIn{
@@ -262,46 +236,18 @@ html[data-mode="clean"] body{background:transparent}
   to{opacity:1;transform:translateY(0)}
 }
 
-.bug.is-out .bug__accent{animation:accentOut 190ms cubic-bezier(.6,0,.9,.4) forwards}
-.bug.is-out .bug__coupon{animation:bodyOut 230ms cubic-bezier(.6,0,.9,.4) 60ms forwards}
-.bug.is-out .bug__stub{animation:wipeOut 190ms cubic-bezier(.6,0,.9,.4) forwards}
-.bug.is-out .bug__life{animation:lifeOut 210ms cubic-bezier(.6,0,.9,.4) 190ms forwards}
-@keyframes accentOut{to{transform:scaleY(0)}}
-@keyframes wipeOut{to{clip-path:inset(0 0 0 100%)}}
-@keyframes bodyOut{to{clip-path:inset(0 0 100% 0)}}
-@keyframes lifeOut{to{scale:0 1;transform-origin:bottom right}}
-
 @media (prefers-reduced-motion:reduce){
-  .bug.is-in .bug__accent,
-  .bug.is-in .bug__coupon,
-  .bug.is-in .bug__stub,
+  .bug{transform:none !important;transition:opacity 200ms ease !important}
   .bug.is-in .bug__name .ch,
   .bug.is-in .bug__line,
-  .bug.is-in .bug__coupon::after,
-  .bug.is-out .bug__accent,
-  .bug.is-out .bug__coupon,
-  .bug.is-out .bug__stub{animation:none !important;clip-path:none !important;transform:none;opacity:1}
-  .bug.is-in{animation:fadeIn 200ms ease both}
-  .bug.is-out{animation:fadeIn 200ms ease reverse both}
-  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .bug.is-in .bug__coupon::after{animation:none !important;opacity:1;transform:none}
 }
 
 /* ------------------------------------------------------------------
    Mode dev — gèle l'alerte, aucune animation, pour valider le rendu
    statique avant de préciser des instructions de charte/copy.
 ------------------------------------------------------------------ */
-html[data-dev="1"] .bug.is-in .bug__accent,
-html[data-dev="1"] .bug.is-out .bug__accent{
-  animation:none !important;
-  transform:none;
-}
-html[data-dev="1"] .bug.is-in .bug__coupon,
-html[data-dev="1"] .bug.is-out .bug__coupon,
-html[data-dev="1"] .bug.is-in .bug__stub,
-html[data-dev="1"] .bug.is-out .bug__stub{
-  animation:none !important;
-  clip-path:none !important;
-}
+html[data-dev="1"] .bug{transition:none}
 html[data-dev="1"] .bug.is-in .bug__name .ch{
   animation:none !important;
   transform:none;
@@ -315,14 +261,6 @@ html[data-dev="1"] .bug.is-in .bug__line{
 html[data-dev="1"] .bug__coupon::after{
   animation:none !important;
   opacity:0 !important;
-}
-html[data-dev="1"] .bug__life{
-  animation:none !important;
-  scale:1 1;
-}
-html[data-dev="1"] .bug__life i{
-  animation:none !important;
-  transform:scaleX(1);
 }
 
 /* ==================================================================

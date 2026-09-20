@@ -97,7 +97,6 @@ import './styles/main.scss';
     var hold = evt.hold || cfg.hold;
 
     bug.dataset.type = evt.type;
-    bug.style.setProperty('--hold', hold + 'ms');
     codeEl.textContent = cfg.code;
     figure.textContent = cfg.figure(evt);
     unit.textContent   = cfg.unit(evt);

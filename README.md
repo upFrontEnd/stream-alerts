@@ -98,14 +98,14 @@ et mapper les notifications vers ces appels :
 
 ## Séquence d'animation
 
-Dans `src/styles/main.scss`, sous le commentaire `Séquence`. L'ordre et les délais :
+La carte entre et sort d'un seul mouvement (fondu + léger décalage/zoom), via
+une transition CSS sur `.bug` (voir `src/styles/main.scss`, juste après le
+bloc `CHARTE`) — pas de découpe par élément. Quelques détails suivent en
+douceur par-dessus :
 
-1. `lifeDraw` 170 ms, la ligne de piste se trace
-2. `shutter` 280 ms à 130 ms, le bandeau s'ouvre par le bas
-3. `markWipe` 230 ms à 320 ms, le bloc chiffre se découpe
-4. `flap` par caractère à 380 ms, décalage de 28 ms, les volets tombent
-5. `sheen` 660 ms à 440 ms, le balayage lumineux
-6. `riseIn` 320 ms à 560 ms, la phrase (`bug__line`)
-7. `lifeDrain` sur toute la durée `--hold`
+1. `flap` par caractère à 120 ms, décalage de 26 ms, les volets du pseudo tombent
+2. `riseIn` 300 ms à 300 ms, la phrase (`bug__line`)
+3. `sheen` 660 ms à 160 ms, le balayage lumineux sur le coupon
 
-La sortie inverse les découpes. `prefers-reduced-motion` remplace le tout par un fondu.
+`prefers-reduced-motion` supprime le décalage/zoom (garde un simple fondu) et
+les détails ci-dessus.
