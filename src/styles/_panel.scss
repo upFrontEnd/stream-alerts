@@ -1,0 +1,51 @@
+/* ==================================================================
+   Aperçu + panneau (absents en mode OBS)
+================================================================== */
+html[data-mode="clean"] .chrome,
+html[data-mode="clean"] .scene{display:none}
+
+.stage{position:relative;display:grid;place-items:center;min-height:clamp(230px,34vh,330px)}
+html[data-mode="clean"] .stage{min-height:100vh;min-height:100dvh}
+
+.wrap{max-width:880px;margin:0 auto;padding:26px 20px 52px}
+.scene{position:relative;border:1px solid var(--ui-line);overflow:hidden}
+.scene[data-bg="cockpit"]{background:linear-gradient(175deg,#4a76a8 0%,#7fa8c9 42%,#1d2a33 42.5%,#0d1319 100%)}
+.scene[data-bg="ciel"]{background:linear-gradient(180deg,#bfe0f5 0%,#eaf4fb 60%,#f6fafd 100%)}
+.scene[data-bg="damier"]{
+  background:repeating-conic-gradient(#0000 0 25%,rgba(127,127,127,.24) 0 50%) 0 0/24px 24px,#7f7f7f;
+}
+
+.chrome{margin-top:22px;font-family:'Barlow Condensed',Arial,sans-serif}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.row + .row{margin-top:12px}
+button,select,input{font:inherit;color:inherit}
+.btn{
+  padding:8px 14px;
+  border:1px solid var(--ui-line);
+  background:var(--ui-card);
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+  transition:border-color .12s,transform .06s;
+}
+.btn:hover{border-color:var(--ui-fg)}
+.btn:active{transform:translateY(1px)}
+.btn:focus-visible{outline:2px solid #ffb020;outline-offset:2px}
+.field{
+  padding:8px 12px;
+  border:1px solid var(--ui-line);
+  background:var(--ui-card);
+  font-size:16px;
+  min-width:180px;
+}
+.field:focus-visible{outline:2px solid #ffb020;outline-offset:2px}
+.hint{
+  margin:18px 0 0;max-width:64ch;
+  font-size:15.5px;line-height:1.62;font-weight:500;color:var(--ui-muted);
+}
+.hint code{
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-size:12.5px;padding:1px 5px;
+  background:color-mix(in srgb,var(--ui-fg) 10%,transparent);
+}
+.sep{width:1px;align-self:stretch;background:var(--ui-line);margin:0 4px}

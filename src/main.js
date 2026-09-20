@@ -1,4 +1,6 @@
 import './styles/main.scss';
+import lottie from 'lottie-web';
+import followAnimData from './assets/lottie/plus.json';
 
 (function(){
   'use strict';
@@ -10,6 +12,27 @@ import './styles/main.scss';
   var nameEl = document.getElementById('name');
   var lineEl = document.getElementById('line');
   var noteEl = document.getElementById('note');
+  var iconEl = document.getElementById('icon');
+
+  /* --- visuel animé du bloc bug__icon, par type --------------- */
+  /* segment : ne joue que le marqueur "in-reveal" du fichier, pas les
+     segments hover/morph qui suivent dans la même timeline */
+  var ICON_ANIMS = { follow:{ data:followAnimData, segment:[0, 100] } };
+  var iconAnim = null;
+  function setIcon(type){
+    if (iconAnim){ iconAnim.destroy(); iconAnim = null; }
+    iconEl.innerHTML = '';
+    var cfg = ICON_ANIMS[type];
+    if (!cfg) return;
+    iconAnim = lottie.loadAnimation({
+      container: iconEl,
+      renderer: 'svg',
+      loop: false,
+      autoplay: true,
+      animationData: cfg.data,
+      initialSegment: cfg.segment
+    });
+  }
 
   function pad(n){ n = Number(n) || 0; return n < 10 ? '0' + n : String(n); }
 
@@ -103,6 +126,7 @@ import './styles/main.scss';
     lineEl.textContent = cfg.line(evt);
     noteEl.textContent = evt.message || '';
     setName(evt.user || 'anonyme');
+    setIcon(evt.type);
 
     bug.classList.remove('is-in','is-out');
     void bug.offsetWidth;

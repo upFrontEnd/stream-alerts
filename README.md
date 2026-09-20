@@ -8,7 +8,10 @@ Deux polices Google Fonts (Barlow Condensed, IBM Plex Mono), tout le reste est l
 | Fichier | Rôle |
 | --- | --- |
 | `index.html` | Structure du bandeau + panneau de test |
-| `src/styles/main.scss` | Charte, mise en page, séquence d'animation |
+| `src/styles/main.scss` | Point d'entrée, importe les fichiers ci-dessous |
+| `src/styles/_base.scss` | Reset, tokens `--ui-*`, thème clair/sombre, `body` |
+| `src/styles/_bug.scss` | Composant d'alerte `.bug` : charte, structure, séquence |
+| `src/styles/_panel.scss` | Aperçu + panneau de test (absents en mode OBS) |
 | `src/main.js` | Catalogue d'événements, file d'attente, son, panneau de test |
 
 ## Développer
@@ -41,21 +44,15 @@ textes, mise en page) avant de donner des instructions de retouche précises.
 
 Deux points d'entrée, tous les deux marqués `CHARTE` dans le code.
 
-**Couleurs** dans `src/styles/main.scss`, sur le sélecteur `.bug` :
+**Couleurs** dans `src/styles/_bug.scss`, sur le sélecteur `.bug` :
 
 ```css
---hull-900: #04121c;  /* fond du bloc gauche (bug__mark) */
---hull-700: #0b2438;
---hull-500: #12384f;
---ink:      #101a24;  /* texte principal, bandeau blanc */
---dim:      #51606d;  /* texte secondaire */
---accent:   #ffb020;  /* couleur maison (bloc gauche + liseré) */
---accent-ink:#1a0f00; /* texte sur la couleur maison */
---skew:     0deg;     /* -8deg pour la version inclinée */
+--ink: #101a24;  /* texte principal, coupon blanc */
+--dim: #51606d;  /* texte secondaire (bug__line, bug__note) */
 ```
 
-Deux couleurs par type juste en dessous, sur `.bug[data-type="..."]` : `--accent`
-(couleur maison, bloc gauche) et `--name` (couleur du pseudo, `bug__name`) :
+Une couleur par type juste en dessous, sur `.bug[data-type="..."]`, dans `--name` :
+utilisée pour la bande de gauche, la souche et le pseudo (`bug__name`) :
 
 | Type (clé) | Libellé | `--name` |
 | --- | --- | --- |
@@ -99,7 +96,7 @@ et mapper les notifications vers ces appels :
 ## Séquence d'animation
 
 La carte entre et sort d'un seul mouvement (fondu + léger décalage/zoom), via
-une transition CSS sur `.bug` (voir `src/styles/main.scss`, juste après le
+une transition CSS sur `.bug` (voir `src/styles/_bug.scss`, juste après le
 bloc `CHARTE`) — pas de découpe par élément. Quelques détails suivent en
 douceur par-dessus :
 
