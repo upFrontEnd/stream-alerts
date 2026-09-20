@@ -136,7 +136,10 @@ html[data-mode="clean"] body{background:transparent}
   align-items:center;
   gap:16px;
   padding:15px 18px 17px 22px;
-  background:#ffffff;
+  background:
+    linear-gradient(90deg,#fff 0%,#fff 55%,rgba(255,255,255,0) 100%),
+    url('../assets/img/Template-Alerte.png') right center / cover no-repeat,
+    #ffffff;
   color:var(--ink);
   transform:skewX(var(--skew));
   clip-path:inset(100% 0 0 0);
@@ -176,15 +179,6 @@ html[data-mode="clean"] body{background:transparent}
   overflow:hidden;
   text-overflow:clip;
   color:var(--name, inherit);
-}
-/* la ligne de charnière des volets */
-.bug__name::after{
-  content:"";
-  position:absolute;
-  left:0;right:0;top:52%;
-  height:1px;
-  background:rgba(4,18,28,.55);
-  pointer-events:none;
 }
 .bug__name .ch{display:inline-block;transform-origin:50% 52%}
 

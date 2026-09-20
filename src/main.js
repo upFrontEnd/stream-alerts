@@ -19,16 +19,12 @@ import './styles/main.scss';
   var TYPES = {
     follow:{
       code:'ARR', figure:function(){ return '01'; }, unit:function(){ return 'pax'; },
-      line:function(){ return 'monte \u00E0 bord'; },
+      line:function(){ return 'vient d\u2019embarquer'; },
       hold:4200
     },
     sub:{
       code:'CLS', figure:function(e){ return pad(e.tier || 1); }, unit:function(){ return 'tier'; },
-      line:function(e){
-        var m = e.months || 1;
-        return m > 1 ? 'embarque pour le ' + m + 'e mois d\u2019affil\u00E9e'
-                     : 'prend sa place \u00E0 bord pour la premi\u00E8re fois';
-      },
+      line:function(){ return 'rejoint l\u2019\u00E9quipage'; },
       hold:5200
     },
     gift:{
@@ -36,7 +32,7 @@ import './styles/main.scss';
       unit:function(e){ return (e.count || 1) > 1 ? 'places' : 'place'; },
       line:function(e){
         var c = e.count || 1;
-        return 'offre ' + c + ' place' + (c > 1 ? 's' : '') + ' \u00E0 l\u2019\u00E9quipage';
+        return 'offre ' + c + ' abonnement' + (c > 1 ? 's' : '') + '.';
       },
       hold:5400
     },
@@ -47,7 +43,7 @@ import './styles/main.scss';
     },
     raid:{
       code:'FMN', figure:function(e){ return e.viewers || 10; }, unit:function(){ return 'pax'; },
-      line:function(){ return 'arrive en formation'; },
+      line:function(){ return 'Rejoint la formation'; },
       hold:5400
     }
   };
