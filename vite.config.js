@@ -5,6 +5,9 @@ export default defineConfig({
   server: {
     open: true,
   },
+  css: {
+    devSourcemap: true,
+  },
   build: {
     outDir: 'dist',
   },
