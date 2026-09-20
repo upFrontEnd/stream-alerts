@@ -14,17 +14,22 @@
   <div class="scene" id="scene" data-bg="cockpit">
     <div class="stage">
       <div class="bug" id="bug" data-type="follow" role="status" aria-live="polite">
-        <div class="bug__mark">
-          <span class="bug__code" id="code">ARR</span>
-          <span class="bug__figure" id="figure">01</span>
-          <span class="bug__unit" id="unit">pax</span>
-        </div>
-        <div class="bug__body">
-          <div class="bug__text">
+        <div class="bug__accent"></div>
+        <div class="bug__coupon">
+          <div class="bug__icon" aria-hidden="true"></div>
+          <div class="bug__pax">
             <p class="bug__name" id="name"></p>
             <p class="bug__line" id="line"></p>
             <span class="bug__note" id="note"></span>
           </div>
+        </div>
+        <div class="bug__stub">
+          <div class="bug__seat">
+            <span class="bug__label" id="unit">pax</span>
+            <span class="bug__value" id="figure">01</span>
+          </div>
+          <div class="bug__barcode"></div>
+          <span class="bug__flightno" id="code">ARR</span>
         </div>
         <div class="bug__life"><i></i></div>
       </div>

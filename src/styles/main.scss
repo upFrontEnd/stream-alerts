@@ -49,16 +49,10 @@ html[data-mode="clean"] body{background:transparent}
    CHARTE — couleurs de la chaîne
 ================================================================== */
 .bug{
-  --hull-900:#04121c;        /* fond du bandeau, bleu nuit (bloc gauche) */
-  --hull-700:#0b2438;
-  --hull-500:#12384f;
-  --ink:#101a24;             /* texte sur le bandeau blanc */
+  --ink:#101a24;             /* texte sur le coupon blanc */
   --dim:#51606d;
 
-  --accent:#ffb020;          /* ambre tableau d'affichage, couleur maison */
-  --accent-ink:#1a0f00;
-
-  --skew:0deg;               /* remettre -8deg pour la version inclinée */
+  --accent:#ffb020;          /* couleur d'origine, ne sert plus qu'au flash du volet nom */
   --hold:4200ms;
 
   position:relative;
@@ -66,96 +60,49 @@ html[data-mode="clean"] body{background:transparent}
   align-items:stretch;
   width:min(780px,94vw);
   visibility:hidden;
+  border-radius:10px;
   filter:drop-shadow(0 10px 26px rgba(0,10,20,.5));
 }
 .bug.is-live{visibility:visible}
 
-/* couleur maison par type + couleur du pseudo (bug__name) */
-.bug[data-type="follow"]{--accent:#2fe08f;--accent-ink:#00230f;--name:#009fe3} /* FOLLOWER */
-.bug[data-type="sub"]   {--accent:#ffb020;--accent-ink:#1a0f00;--name:#00b132} /* SUB */
-.bug[data-type="gift"]  {--accent:#ff5fc0;--accent-ink:#2c0020;--name:#5e008a} /* HOST */
-.bug[data-type="bits"]  {--accent:#4fc9ff;--accent-ink:#00202e;--name:#db4798} /* DONS */
-.bug[data-type="raid"]  {--accent:#ff6a42;--accent-ink:#2a0a00;--name:#ff9000} /* RAID */
+/* couleur maison par type : bande, souche, pseudo (--name) + flash du volet nom (--accent) */
+.bug[data-type="follow"]{--accent:#2fe08f;--name:#009fe3} /* FOLLOWER */
+.bug[data-type="sub"]   {--accent:#ffb020;--name:#00b132} /* SUB */
+.bug[data-type="gift"]  {--accent:#ff5fc0;--name:#5e008a} /* HOST */
+.bug[data-type="bits"]  {--accent:#4fc9ff;--name:#db4798} /* DONS */
+.bug[data-type="raid"]  {--accent:#ff6a42;--name:#ff9000} /* RAID */
 
 /* ------------------------------------------------------------------
-   Bloc gauche : le chiffre qui compte
+   Bande de couleur, bord gauche
 ------------------------------------------------------------------ */
-.bug__mark{
-  position:relative;
+.bug__accent{
   flex:0 0 auto;
-  min-width:112px;
-  display:grid;
-  place-content:center;
-  gap:2px;
-  padding:16px 20px 18px;
-  background:var(--accent);
-  color:var(--accent-ink);
-  text-align:center;
-  transform:skewX(var(--skew));
-  clip-path:inset(0 100% 0 0);
-}
-.bug__mark > *{transform:skewX(calc(var(--skew) * -1))}
-/* bande de hazard côté fuselage */
-.bug__mark::after{
-  content:"";
-  position:absolute;
-  top:0;bottom:0;right:0;
-  width:7px;
-  background:repeating-linear-gradient(135deg,rgba(0,0,0,.45) 0 5px,transparent 5px 10px);
-}
-.bug__code{
-  font-family:'IBM Plex Mono',ui-monospace,monospace;
-  font-size:10px;
-  font-weight:700;
-  letter-spacing:.14em;
-  opacity:.62;
-}
-.bug__figure{
-  font-family:'IBM Plex Mono',ui-monospace,monospace;
-  font-size:34px;
-  font-weight:700;
-  line-height:1;
-  letter-spacing:-.03em;
-  font-variant-numeric:tabular-nums;
-}
-.bug__unit{
-  font-size:13px;
-  font-weight:600;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  opacity:.7;
+  width:10px;
+  background:var(--name);
+  border-radius:10px 0 0 10px;
+  transform-origin:top;
 }
 
 /* ------------------------------------------------------------------
-   Bandeau principal
+   Coupon principal
 ------------------------------------------------------------------ */
-.bug__body{
+.bug__coupon{
   position:relative;
   flex:1 1 auto;
   display:flex;
   align-items:center;
-  gap:16px;
-  padding:15px 18px 17px 22px;
+  gap:18px;
+  min-width:0;
+  padding:16px 22px;
   background:
     linear-gradient(90deg,#fff 0%,#fff 55%,rgba(255,255,255,0) 100%),
     url('../assets/img/Template-Alerte.png') right center / cover no-repeat,
     #ffffff;
   color:var(--ink);
-  transform:skewX(var(--skew));
-  clip-path:inset(100% 0 0 0);
   overflow:hidden;
 }
-.bug__body > *{transform:skewX(calc(var(--skew) * -1))}
-.bug__body::before{
-  content:"";
-  position:absolute;
-  inset:0 auto 0 0;
-  width:2px;
-  background:var(--accent);
-  opacity:.55;
-}
 /* balayage */
-.bug__body::after{
+.bug__coupon::after{
   content:"";
   position:absolute;
   inset:0 auto 0 -40%;
@@ -164,7 +111,15 @@ html[data-mode="clean"] body{background:transparent}
   opacity:0;
 }
 
-.bug__text{flex:1 1 auto;min-width:0;position:relative}
+/* espace réservé au visuel du type d'événement (SVG animé à venir) */
+.bug__icon{
+  flex:0 0 auto;
+  align-self:stretch;
+  width:34px;
+  border-right:1.5px dashed rgba(16,26,36,.28);
+}
+
+.bug__pax{flex:1 1 auto;min-width:0;position:relative}
 
 /* nom en volets d'affichage, couleur par type via --name (voir CHARTE) */
 .bug__name{
@@ -203,13 +158,66 @@ html[data-mode="clean"] body{background:transparent}
 .bug__note:empty{display:none}
 
 /* ------------------------------------------------------------------
+   Souche, bord droit
+------------------------------------------------------------------ */
+.bug__stub{
+  position:relative;
+  flex:0 0 auto;
+  width:118px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:10px;
+  padding:16px 16px 16px 20px;
+  background:var(--name);
+  border-radius:0 10px 10px 0;
+  border-left:2px dashed rgba(255,255,255,.55);
+}
+.bug__seat{display:grid;gap:2px}
+.bug__label{
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-size:9.5px;
+  font-weight:700;
+  letter-spacing:.14em;
+  color:rgba(255,255,255,.65);
+  text-transform:uppercase;
+}
+.bug__value{
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-size:17px;
+  font-weight:700;
+  color:#fff;
+  font-variant-numeric:tabular-nums;
+}
+.bug__barcode{
+  height:26px;
+  background:repeating-linear-gradient(
+    90deg,
+    rgba(255,255,255,.92) 0 2px,
+    transparent 2px 4px,
+    rgba(255,255,255,.92) 4px 5px,
+    transparent 5px 6px,
+    rgba(255,255,255,.92) 6px 9px,
+    transparent 9px 11px,
+    rgba(255,255,255,.92) 11px 12px,
+    transparent 12px 15px
+  );
+}
+.bug__flightno{
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:.08em;
+  color:rgba(255,255,255,.75);
+}
+
+/* ------------------------------------------------------------------
    Ligne médiane de piste = temps restant
 ------------------------------------------------------------------ */
 .bug__life{
   position:absolute;
   left:0;right:0;bottom:-7px;
   height:5px;
-  transform:skewX(var(--skew));
   transform-origin:bottom left;
   scale:0 1;
   background:rgba(120,170,200,.16);
@@ -219,7 +227,7 @@ html[data-mode="clean"] body{background:transparent}
   height:100%;
   width:100%;
   transform-origin:left;
-  background:repeating-linear-gradient(90deg,var(--accent) 0 22px,transparent 22px 34px);
+  background:repeating-linear-gradient(90deg,var(--name) 0 22px,transparent 22px 34px);
 }
 
 /* ------------------------------------------------------------------
@@ -227,13 +235,15 @@ html[data-mode="clean"] body{background:transparent}
 ------------------------------------------------------------------ */
 .bug.is-in .bug__life{animation:lifeDraw 170ms cubic-bezier(.2,.7,.3,1) forwards}
 .bug.is-in .bug__life i{animation:lifeDrain var(--hold) linear 520ms forwards}
-.bug.is-in .bug__body{animation:shutter 280ms cubic-bezier(.16,.9,.24,1) 130ms forwards}
-.bug.is-in .bug__mark{animation:markWipe 230ms cubic-bezier(.16,.9,.24,1) 320ms forwards}
-.bug.is-in .bug__body::after{animation:sheen 660ms ease-out 440ms forwards}
+.bug.is-in .bug__accent{animation:accentDraw 170ms cubic-bezier(.2,.7,.3,1) forwards}
+.bug.is-in .bug__coupon{animation:shutter 280ms cubic-bezier(.16,.9,.24,1) 130ms forwards}
+.bug.is-in .bug__stub{animation:wipeIn 230ms cubic-bezier(.16,.9,.24,1) 320ms forwards}
+.bug.is-in .bug__coupon::after{animation:sheen 660ms ease-out 440ms forwards}
 .bug.is-in .bug__name .ch{animation:flap 400ms cubic-bezier(.2,.85,.25,1) backwards;animation-delay:calc(380ms + var(--i) * 28ms)}
 .bug.is-in .bug__line{animation:riseIn 320ms cubic-bezier(.2,.8,.25,1) 560ms backwards}
 
-@keyframes markWipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes accentDraw{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes wipeIn{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
 @keyframes shutter{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
 @keyframes lifeDraw{from{scale:0 1}to{scale:1 1}}
 @keyframes lifeDrain{from{transform:scaleX(1)}to{transform:scaleX(0)}}
@@ -248,25 +258,29 @@ html[data-mode="clean"] body{background:transparent}
   100%{transform:rotateX(0);color:inherit}
 }
 @keyframes riseIn{
-  from{opacity:0;transform:skewX(calc(var(--skew) * -1)) translateY(9px)}
-  to{opacity:1;transform:skewX(calc(var(--skew) * -1)) translateY(0)}
+  from{opacity:0;transform:translateY(9px)}
+  to{opacity:1;transform:translateY(0)}
 }
 
-.bug.is-out .bug__mark{animation:markOut 190ms cubic-bezier(.6,0,.9,.4) forwards}
-.bug.is-out .bug__body{animation:bodyOut 230ms cubic-bezier(.6,0,.9,.4) 60ms forwards}
+.bug.is-out .bug__accent{animation:accentOut 190ms cubic-bezier(.6,0,.9,.4) forwards}
+.bug.is-out .bug__coupon{animation:bodyOut 230ms cubic-bezier(.6,0,.9,.4) 60ms forwards}
+.bug.is-out .bug__stub{animation:wipeOut 190ms cubic-bezier(.6,0,.9,.4) forwards}
 .bug.is-out .bug__life{animation:lifeOut 210ms cubic-bezier(.6,0,.9,.4) 190ms forwards}
-@keyframes markOut{to{clip-path:inset(0 0 0 100%)}}
+@keyframes accentOut{to{transform:scaleY(0)}}
+@keyframes wipeOut{to{clip-path:inset(0 0 0 100%)}}
 @keyframes bodyOut{to{clip-path:inset(0 0 100% 0)}}
 @keyframes lifeOut{to{scale:0 1;transform-origin:bottom right}}
 
 @media (prefers-reduced-motion:reduce){
-  .bug.is-in .bug__mark,
-  .bug.is-in .bug__body,
+  .bug.is-in .bug__accent,
+  .bug.is-in .bug__coupon,
+  .bug.is-in .bug__stub,
   .bug.is-in .bug__name .ch,
   .bug.is-in .bug__line,
-  .bug.is-in .bug__body::after,
-  .bug.is-out .bug__mark,
-  .bug.is-out .bug__body{animation:none !important;clip-path:none !important;opacity:1;transform:skewX(calc(var(--skew) * -1))}
+  .bug.is-in .bug__coupon::after,
+  .bug.is-out .bug__accent,
+  .bug.is-out .bug__coupon,
+  .bug.is-out .bug__stub{animation:none !important;clip-path:none !important;transform:none;opacity:1}
   .bug.is-in{animation:fadeIn 200ms ease both}
   .bug.is-out{animation:fadeIn 200ms ease reverse both}
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -276,13 +290,17 @@ html[data-mode="clean"] body{background:transparent}
    Mode dev — gèle l'alerte, aucune animation, pour valider le rendu
    statique avant de préciser des instructions de charte/copy.
 ------------------------------------------------------------------ */
-html[data-dev="1"] .bug.is-in .bug__mark,
-html[data-dev="1"] .bug.is-in .bug__body,
-html[data-dev="1"] .bug.is-out .bug__mark,
-html[data-dev="1"] .bug.is-out .bug__body{
+html[data-dev="1"] .bug.is-in .bug__accent,
+html[data-dev="1"] .bug.is-out .bug__accent{
+  animation:none !important;
+  transform:none;
+}
+html[data-dev="1"] .bug.is-in .bug__coupon,
+html[data-dev="1"] .bug.is-out .bug__coupon,
+html[data-dev="1"] .bug.is-in .bug__stub,
+html[data-dev="1"] .bug.is-out .bug__stub{
   animation:none !important;
   clip-path:none !important;
-  transform:skewX(calc(var(--skew) * -1));
 }
 html[data-dev="1"] .bug.is-in .bug__name .ch{
   animation:none !important;
@@ -292,9 +310,9 @@ html[data-dev="1"] .bug.is-in .bug__name .ch{
 html[data-dev="1"] .bug.is-in .bug__line{
   animation:none !important;
   opacity:1;
-  transform:skewX(calc(var(--skew) * -1));
+  transform:none;
 }
-html[data-dev="1"] .bug__body::after{
+html[data-dev="1"] .bug__coupon::after{
   animation:none !important;
   opacity:0 !important;
 }
