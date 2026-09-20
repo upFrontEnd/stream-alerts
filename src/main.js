@@ -1,6 +1,8 @@
 import './styles/main.scss';
 import lottie from 'lottie-web';
 import followAnimData from './assets/lottie/plus.json';
+import subAnimData from './assets/lottie/check.json';
+import giftAnimData from './assets/lottie/gifting.json';
 
 (function(){
   'use strict';
@@ -17,7 +19,11 @@ import followAnimData from './assets/lottie/plus.json';
   /* --- visuel animé du bloc bug__icon, par type --------------- */
   /* segment : ne joue que le marqueur "in-reveal" du fichier, pas les
      segments hover/morph qui suivent dans la même timeline */
-  var ICON_ANIMS = { follow:{ data:followAnimData, segment:[0, 100] } };
+  var ICON_ANIMS = {
+    follow:{ data:followAnimData, segment:[0, 100] },
+    sub:{ data:subAnimData },
+    gift:{ data:giftAnimData }
+  };
   var iconAnim = null;
   function setIcon(type){
     if (iconAnim){ iconAnim.destroy(); iconAnim = null; }

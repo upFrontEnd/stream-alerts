@@ -48,7 +48,7 @@
   align-items:center;
   gap:22px;
   min-width:0;
-  padding:16px 22px;
+  padding:10px;
   background:
     linear-gradient(90deg,#fff 0%,#fff 55%,rgba(255,255,255,0) 100%),
     url('../assets/img/Template-Alerte.png') right center / cover no-repeat,
@@ -70,7 +70,8 @@
 .bug__icon{
   flex:0 0 auto;
   align-self:stretch;
-  width:60px;
+  width: 88px;
+  padding-right: 7px;
   display:flex;
   align-items:center;
   justify-content:center;
