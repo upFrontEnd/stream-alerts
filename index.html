@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr" data-mode="demo">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alertes SkyflyerAviation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="wrap">
+  <div class="scene" id="scene" data-bg="cockpit">
+    <div class="stage">
+      <div class="bug" id="bug" data-type="follow" role="status" aria-live="polite">
+        <div class="bug__mark">
+          <span class="bug__code" id="code">ARR</span>
+          <span class="bug__figure" id="figure">01</span>
+          <span class="bug__unit" id="unit">pax</span>
+        </div>
+        <div class="bug__body">
+          <div class="bug__text">
+            <p class="bug__name" id="name"></p>
+            <p class="bug__line" id="line"></p>
+            <span class="bug__note" id="note"></span>
+          </div>
+          <span class="bug__tag" id="tag"></span>
+          <span class="bug__wordmark">SKYFLYER</span>
+        </div>
+        <div class="bug__life"><i></i></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome">
+    <div class="row">
+      <button class="btn" data-fire="follow">Nouveau follow</button>
+      <button class="btn" data-fire="sub">Abonnement</button>
+      <button class="btn" data-fire="gift">Subs offerts</button>
+      <button class="btn" data-fire="bits">Bits</button>
+      <button class="btn" data-fire="raid">Raid</button>
+      <span class="sep"></span>
+      <button class="btn" id="burst">Envoyer 4 alertes d'affilée</button>
+    </div>
+    <div class="row">
+      <input class="field" id="pseudo" placeholder="Pseudo à afficher" aria-label="Pseudo à afficher">
+      <button class="btn" id="bg">Fond : cockpit</button>
+      <button class="btn" id="snd" aria-pressed="true">Son : activé</button>
+    </div>
+    <p class="hint">
+      Source navigateur dans OBS, URL suivie de <code>?clean=1</code> : fond transparent, panneau masqué. Taille conseillée 820 × 270.
+      Déclenchement depuis ton code : <code>Alerts.push({ type:'sub', user:'Nom', tier:2, months:14 })</code>.
+    </p>
+  </div>
+</div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
