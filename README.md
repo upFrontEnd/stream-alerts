@@ -66,8 +66,12 @@ utilisée pour la bande de gauche, la souche et le pseudo (`bug__name`) :
 `code` (3 ou 4 lettres du bloc gauche), `figure`, `unit`, `line` et `hold`
 (durée d'affichage en ms).
 
-**Son** dans `src/main.js`, objet `MOTIF` : une liste de fréquences par type,
-jouées en sinus. Remplacer `chime()` par un `new Audio()` si tu préfères des fichiers.
+**Son** : dépose un fichier `public/sound/<type>.mp3` (ex. `public/sound/follow.mp3`,
+`public/sound/sub.mp3`...) pour un son custom sur ce type d'alerte. Si le fichier
+est absent, `chime()` bascule automatiquement sur le carillon synthétisé
+(`synthChime()` dans `src/main.js`, objet `MOTIF` : liste de fréquences par
+type, jouées en sinus) — donc rien ne casse tant que tous les sons ne sont
+pas fournis.
 
 ## Brancher les vrais événements
 

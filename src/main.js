@@ -153,8 +153,28 @@ import giftAnimData from './assets/lottie/gifting.json';
 
   window.Alerts = { push:push, types:Object.keys(TYPES) };
 
-  /* --- son : carillon de cabine --------------------------------- */
-  var ctx = null, soundOn = true;
+  /* --- son ------------------------------------------------------- */
+  var soundOn = true;
+
+  /* son custom : dépose un fichier public/sound/<type>.mp3 (ex.
+     public/sound/follow.mp3) pour remplacer le carillon synthétisé
+     de ce type. Absent -> bascule automatiquement sur le carillon. */
+  function chime(type){
+    if (!soundOn) return;
+    var audio = new Audio('sound/' + type + '.mp3');
+    var fellBack = false;
+    function fallback(){
+      if (fellBack) return;
+      fellBack = true;
+      synthChime(type);
+    }
+    audio.addEventListener('error', fallback);
+    var playing = audio.play();
+    if (playing && playing.catch) playing.catch(fallback);
+  }
+
+  /* --- carillon de cabine (synthétisé, fallback) ------------------ */
+  var ctx = null;
   var MOTIF = {
     follow:[587.33, 880],        /* le "bing bong" de la cabine */
     sub:[698.46, 880, 1174.66],
@@ -162,8 +182,7 @@ import giftAnimData from './assets/lottie/gifting.json';
     bits:[880, 659.25],
     raid:[440, 587.33, 880]
   };
-  function chime(type){
-    if (!soundOn) return;
+  function synthChime(type){
     try{
       if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
       if (ctx.state === 'suspended') ctx.resume();
