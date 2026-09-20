@@ -156,21 +156,20 @@ import giftAnimData from './assets/lottie/gifting.json';
   /* --- son ------------------------------------------------------- */
   var soundOn = true;
 
-  /* son custom : dépose un fichier public/sound/<type>.mp3 (ex.
-     public/sound/follow.mp3) pour remplacer le carillon synthétisé
-     de ce type. Absent -> bascule automatiquement sur le carillon. */
+  /* son custom : dépose un fichier src/assets/sound/<type>.mp3 (ex.
+     src/assets/sound/follow.mp3) pour remplacer le carillon synthétisé
+     de ce type. Absent -> bascule automatiquement sur le carillon.
+     import.meta.glob liste les fichiers présents au moment du build,
+     donc rien ne casse tant qu'ils ne sont pas tous fournis. */
+  var SOUND_URLS = import.meta.glob('./assets/sound/*.mp3', { eager:true, query:'?url', import:'default' });
+  function soundUrl(type){
+    return SOUND_URLS['./assets/sound/' + type + '.mp3'];
+  }
   function chime(type){
     if (!soundOn) return;
-    var audio = new Audio('sound/' + type + '.mp3');
-    var fellBack = false;
-    function fallback(){
-      if (fellBack) return;
-      fellBack = true;
-      synthChime(type);
-    }
-    audio.addEventListener('error', fallback);
-    var playing = audio.play();
-    if (playing && playing.catch) playing.catch(fallback);
+    var url = soundUrl(type);
+    if (!url){ synthChime(type); return; }
+    new Audio(url).play().catch(function(){ synthChime(type); });
   }
 
   /* --- carillon de cabine (synthétisé, fallback) ------------------ */
