@@ -66,8 +66,9 @@ utilisée pour la bande de gauche, la souche et le pseudo (`bug__name`) :
 `code` (3 ou 4 lettres du bloc gauche), `figure`, `unit`, `line` et `hold`
 (durée d'affichage en ms).
 
-**Son** : dépose un fichier `src/assets/sound/<type>.mp3` (ex. `src/assets/sound/follow.mp3`,
-`src/assets/sound/sub.mp3`...) pour un son custom sur ce type d'alerte. Si le fichier
+**Son** : dépose un fichier `src/assets/sound/<type>.mp3` ou `.ogg` (ex.
+`src/assets/sound/follow.mp3`, `src/assets/sound/sub.ogg`...) pour un son
+custom sur ce type d'alerte. Si le fichier
 est absent, `chime()` bascule automatiquement sur le carillon synthétisé
 (`synthChime()` dans `src/main.js`, objet `MOTIF` : liste de fréquences par
 type, jouées en sinus) — donc rien ne casse tant que tous les sons ne sont

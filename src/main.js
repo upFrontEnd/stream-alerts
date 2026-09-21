@@ -3,6 +3,8 @@ import lottie from 'lottie-web';
 import followAnimData from './assets/lottie/plus.json';
 import subAnimData from './assets/lottie/check.json';
 import giftAnimData from './assets/lottie/gifting.json';
+import bitsAnimData from './assets/lottie/shining.json';
+import raidAnimData from './assets/lottie/radar.json';
 
 (function(){
   'use strict';
@@ -22,7 +24,9 @@ import giftAnimData from './assets/lottie/gifting.json';
   var ICON_ANIMS = {
     follow:{ data:followAnimData, segment:[0, 100] },
     sub:{ data:subAnimData },
-    gift:{ data:giftAnimData }
+    gift:{ data:giftAnimData },
+    bits:{ data:bitsAnimData },
+    raid:{ data:raidAnimData, loop:true } /* balayage continu tant que l'alerte est affichée */
   };
   var iconAnim = null;
   function setIcon(type){
@@ -33,10 +37,11 @@ import giftAnimData from './assets/lottie/gifting.json';
     iconAnim = lottie.loadAnimation({
       container: iconEl,
       renderer: 'svg',
-      loop: false,
+      loop: !!cfg.loop,
       autoplay: true,
       animationData: cfg.data,
-      initialSegment: cfg.segment
+      initialSegment: cfg.segment,
+      rendererSettings: { preserveAspectRatio: 'xMidYMid meet' }
     });
   }
 
@@ -156,14 +161,15 @@ import giftAnimData from './assets/lottie/gifting.json';
   /* --- son ------------------------------------------------------- */
   var soundOn = true;
 
-  /* son custom : dépose un fichier src/assets/sound/<type>.mp3 (ex.
-     src/assets/sound/follow.mp3) pour remplacer le carillon synthétisé
-     de ce type. Absent -> bascule automatiquement sur le carillon.
-     import.meta.glob liste les fichiers présents au moment du build,
-     donc rien ne casse tant qu'ils ne sont pas tous fournis. */
-  var SOUND_URLS = import.meta.glob('./assets/sound/*.mp3', { eager:true, query:'?url', import:'default' });
+  /* son custom : dépose un fichier src/assets/sound/<type>.mp3 ou .ogg
+     (ex. src/assets/sound/follow.ogg) pour remplacer le carillon
+     synthétisé de ce type. Absent -> bascule automatiquement sur le
+     carillon. import.meta.glob liste les fichiers présents au moment
+     du build, donc rien ne casse tant qu'ils ne sont pas tous fournis. */
+  var SOUND_URLS = import.meta.glob('./assets/sound/*.{mp3,ogg}', { eager:true, query:'?url', import:'default' });
   function soundUrl(type){
-    return SOUND_URLS['./assets/sound/' + type + '.mp3'];
+    return SOUND_URLS['./assets/sound/' + type + '.mp3']
+        || SOUND_URLS['./assets/sound/' + type + '.ogg'];
   }
   function chime(type){
     if (!soundOn) return;
