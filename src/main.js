@@ -160,26 +160,75 @@ import raidAnimData from './assets/lottie/radar.json';
 
   /* --- son ------------------------------------------------------- */
   var soundOn = true;
+  var ctx = null;
+  function getCtx(){
+    if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === 'suspended') ctx.resume();
+    return ctx;
+  }
 
-  /* son custom : dépose un fichier src/assets/sound/<type>.mp3 ou .ogg
-     (ex. src/assets/sound/follow.ogg) pour remplacer le carillon
+  /* son custom : dépose un fichier src/assets/sound/<type>.mp3, .ogg ou
+     .wav (ex. src/assets/sound/follow.ogg) pour remplacer le carillon
      synthétisé de ce type. Absent -> bascule automatiquement sur le
      carillon. import.meta.glob liste les fichiers présents au moment
      du build, donc rien ne casse tant qu'ils ne sont pas tous fournis. */
-  var SOUND_URLS = import.meta.glob('./assets/sound/*.{mp3,ogg}', { eager:true, query:'?url', import:'default' });
+  var SOUND_URLS = import.meta.glob('./assets/sound/*.{mp3,ogg,wav}', { eager:true, query:'?url', import:'default' });
+  var SOUND_EXTS = ['mp3', 'ogg', 'wav'];
   function soundUrl(type){
-    return SOUND_URLS['./assets/sound/' + type + '.mp3']
-        || SOUND_URLS['./assets/sound/' + type + '.ogg'];
+    for (var i = 0; i < SOUND_EXTS.length; i++){
+      var url = SOUND_URLS['./assets/sound/' + type + '.' + SOUND_EXTS[i]];
+      if (url) return url;
+    }
   }
+
+  /* normalisation : chaque fichier custom est décodé une fois au
+     chargement, son pic d'amplitude mesuré, puis rejoué via un gain qui
+     ramène ce pic au même niveau que le carillon synthétisé
+     (TARGET_PEAK) — pour que fichiers et carillon sortent à un volume
+     comparable, quelle que soit la façon dont chaque fichier a été
+     mastérisé à l'origine. */
+  var TARGET_PEAK = 0.18;
+  var MAX_GAIN = 6;
+  var soundBuffers = {};
+  function loadSoundBuffer(type){
+    var url = soundUrl(type);
+    if (!url || soundBuffers[type]) return;
+    soundBuffers[type] = 'loading';
+    fetch(url)
+      .then(function(r){ return r.arrayBuffer(); })
+      .then(function(data){ return getCtx().decodeAudioData(data); })
+      .then(function(buffer){
+        var peak = 0;
+        for (var ch = 0; ch < buffer.numberOfChannels; ch++){
+          var samples = buffer.getChannelData(ch);
+          for (var i = 0; i < samples.length; i += 32){
+            var v = Math.abs(samples[i]);
+            if (v > peak) peak = v;
+          }
+        }
+        soundBuffers[type] = { buffer:buffer, gain: peak > 0 ? Math.min(TARGET_PEAK / peak, MAX_GAIN) : 1 };
+      })
+      .catch(function(){ soundBuffers[type] = null; });
+  }
+  Object.keys(TYPES).forEach(loadSoundBuffer);
+
   function chime(type){
     if (!soundOn) return;
-    var url = soundUrl(type);
-    if (!url){ synthChime(type); return; }
-    new Audio(url).play().catch(function(){ synthChime(type); });
+    var entry = soundBuffers[type];
+    if (entry && entry !== 'loading'){
+      var c = getCtx();
+      var src = c.createBufferSource();
+      src.buffer = entry.buffer;
+      var g = c.createGain();
+      g.gain.value = entry.gain;
+      src.connect(g).connect(c.destination);
+      src.start();
+      return;
+    }
+    synthChime(type);
   }
 
   /* --- carillon de cabine (synthétisé, fallback) ------------------ */
-  var ctx = null;
   var MOTIF = {
     follow:[587.33, 880],        /* le "bing bong" de la cabine */
     sub:[698.46, 880, 1174.66],
@@ -189,20 +238,19 @@ import raidAnimData from './assets/lottie/radar.json';
   };
   function synthChime(type){
     try{
-      if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
-      if (ctx.state === 'suspended') ctx.resume();
+      var c = getCtx();
       var notes = MOTIF[type] || MOTIF.follow;
-      var t0 = ctx.currentTime + 0.12;
+      var t0 = c.currentTime + 0.12;
       notes.forEach(function(f, i){
         var t = t0 + i * 0.16;
-        var osc = ctx.createOscillator();
-        var gain = ctx.createGain();
+        var osc = c.createOscillator();
+        var gain = c.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(f, t);
         gain.gain.setValueAtTime(0.0001, t);
         gain.gain.exponentialRampToValueAtTime(0.18, t + 0.014);
         gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.52);
-        osc.connect(gain).connect(ctx.destination);
+        osc.connect(gain).connect(c.destination);
         osc.start(t);
         osc.stop(t + 0.55);
       });

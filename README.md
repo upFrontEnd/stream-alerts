@@ -66,13 +66,19 @@ utilisée pour la bande de gauche, la souche et le pseudo (`bug__name`) :
 `code` (3 ou 4 lettres du bloc gauche), `figure`, `unit`, `line` et `hold`
 (durée d'affichage en ms).
 
-**Son** : dépose un fichier `src/assets/sound/<type>.mp3` ou `.ogg` (ex.
-`src/assets/sound/follow.mp3`, `src/assets/sound/sub.ogg`...) pour un son
+**Son** : dépose un fichier `src/assets/sound/<type>.mp3`, `.ogg` ou `.wav`
+(ex. `src/assets/sound/follow.mp3`, `src/assets/sound/sub.wav`...) pour un son
 custom sur ce type d'alerte. Si le fichier
 est absent, `chime()` bascule automatiquement sur le carillon synthétisé
 (`synthChime()` dans `src/main.js`, objet `MOTIF` : liste de fréquences par
 type, jouées en sinus) — donc rien ne casse tant que tous les sons ne sont
 pas fournis.
+
+**Volume homogène** : chaque fichier custom est décodé une fois au chargement
+(Web Audio API), son pic d'amplitude mesuré, puis rejoué avec un gain qui
+ramène ce pic au même niveau que le carillon synthétisé (`TARGET_PEAK` dans
+`src/main.js`). Peu importe le volume d'origine de chaque fichier téléchargé,
+toutes les alertes sortent à un niveau sonore comparable.
 
 ## Brancher les vrais événements
 
