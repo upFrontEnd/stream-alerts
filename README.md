@@ -32,6 +32,20 @@ ou forcer le mode propre en remplaçant `data-mode="demo"` par `data-mode="clean
 sur la balise `<html>`.
 Taille conseillée : 820 × 270.
 
+## Tester les alertes depuis OBS
+
+Dans OBS, clic droit sur la Browser Source → **Interact**, puis clique dans la fenêtre pour la focus.
+
+| Touche | Alerte déclenchée |
+| --- | --- |
+| `F` | Follow |
+| `S` | Abonnement (sub) |
+| `G` | Subs offerts (gift) |
+| `B` | Bits |
+| `R` | Raid |
+
+Ces raccourcis fonctionnent avec ou sans `?clean=1`.
+
 ## Mode dev
 
 URL suivie de `?dev=1`, ou bouton « Mode dev » du panneau : l'alerte apparaît
