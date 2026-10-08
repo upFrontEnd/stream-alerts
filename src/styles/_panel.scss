@@ -1,8 +1,9 @@
 /* ==================================================================
    Aperçu + panneau (absents en mode OBS)
 ================================================================== */
-html[data-mode="clean"] .chrome,
-html[data-mode="clean"] .scene{display:none}
+html[data-mode="clean"] .chrome{display:none}
+html[data-mode="clean"] .scene{background:transparent !important;border:none;overflow:visible}
+html[data-mode="clean"] .wrap{max-width:none;padding:0}
 
 .stage{position:relative;display:grid;place-items:center;min-height:clamp(230px,34vh,330px)}
 html[data-mode="clean"] .stage{min-height:100vh;min-height:100dvh}
