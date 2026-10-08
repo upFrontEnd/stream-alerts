@@ -1,5 +1,6 @@
 import './styles/main.scss';
 import lottie from 'lottie-web';
+import { initTwitch } from './twitch.js';
 import followAnimData from './assets/lottie/plus.json';
 import subAnimData from './assets/lottie/check.json';
 import giftAnimData from './assets/lottie/gifting.json';
@@ -157,6 +158,7 @@ import raidAnimData from './assets/lottie/radar.json';
   }
 
   window.Alerts = { push:push, types:Object.keys(TYPES) };
+  initTwitch(push);
 
   /* --- son ------------------------------------------------------- */
   var soundOn = true;
