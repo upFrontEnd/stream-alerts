@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "Remove-Item 'D:\\Dropbox\\LAB - FORMATION\\SIMULATION\\stream-alerts\\vite.config.js.timestamp-*.mjs' -Force -ErrorAction SilentlyContinue",
+            "shell": "powershell"
+          }
+        ]
+      }
+    ]
+  }
+}
