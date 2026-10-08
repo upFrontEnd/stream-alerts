@@ -319,4 +319,10 @@ import raidAnimData from './assets/lottie/radar.json';
   } else {
     setTimeout(function(){ push(sample('follow')); }, 600);
   }
+
+  var KEY_MAP = { f:'follow', s:'sub', g:'gift', b:'bits', r:'raid' };
+  document.addEventListener('keydown', function(e){
+    var type = KEY_MAP[e.key.toLowerCase()];
+    if (type) push(sample(type));
+  });
 })();
