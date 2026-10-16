@@ -162,7 +162,7 @@
   text-overflow:clip;
   color:var(--name,inherit);
 }
-.bug__name .ch{display:inline-block;transform-origin:50% 52%}
+.bug__name .ch{display:inline-block;transform-origin:50% 100%;will-change:transform}
 
 .bug__line{
   margin:7px 0 0;
@@ -310,7 +310,16 @@
    transition sur .bug ci-dessus) ; ces détails suivent en douceur.
 ------------------------------------------------------------------ */
 .bug.is-in .bug__coupon::after{animation:sheen 660ms ease-out 160ms forwards}
-.bug.is-in .bug__name .ch{animation:flap 380ms cubic-bezier(.2,.85,.25,1) backwards;animation-delay:calc(120ms + var(--i) * 26ms)}
+/* pseudo : chaque lettre jaillit du bas (le nom sert de masque), se redresse
+   avec un léger dépassement, puis un éclat traverse le mot de gauche à droite */
+.bug.is-in .bug__name .ch{
+  animation:
+    letterRise 560ms cubic-bezier(.2,.9,.25,1) backwards,
+    letterGlint 7000ms ease-in-out infinite;
+  animation-delay:
+    calc(110ms + var(--i) * 34ms),
+    calc(900ms + var(--i) * 110ms);
+}
 .bug.is-in .bug__line{animation:riseIn 300ms cubic-bezier(.2,.8,.25,1) 300ms backwards}
 .bug.is-in .bug__stamp{animation:stampIn 520ms ease-out 400ms backwards}
 
@@ -319,10 +328,16 @@
   15%{opacity:1}
   100%{opacity:0;transform:translateX(500%)}
 }
-@keyframes flap{
-  0%{transform:rotateX(-94deg);color:#333}
-  52%{color:#333}
-  100%{transform:rotateX(0);color:inherit}
+@keyframes letterRise{
+  0%  {transform:translateY(112%) skewY(10deg) scaleY(1.25);opacity:0;filter:blur(5px)}
+  55% {transform:translateY(-5%) skewY(-3deg) scaleY(.96);opacity:1;filter:blur(0)}
+  80% {transform:translateY(1%) skewY(1deg) scaleY(1.01)}
+  100%{transform:translateY(0) skewY(0) scaleY(1);opacity:1;filter:blur(0)}
+}
+/* l'éclat n'occupe que le début du cycle : une vague, puis une pause */
+@keyframes letterGlint{
+  0%,34%,100%{filter:brightness(1)}
+  17%        {filter:brightness(1.5) saturate(1.12)}
 }
 @keyframes riseIn{
   from{opacity:0;transform:translateY(9px)}
@@ -353,7 +368,8 @@ html[data-dev="1"] .bug{transition:none}
 html[data-dev="1"] .bug.is-in .bug__name .ch{
   animation:none !important;
   transform:none;
-  color:inherit;
+  filter:none;
+  opacity:1;
 }
 html[data-dev="1"] .bug.is-in .bug__line{
   animation:none !important;
