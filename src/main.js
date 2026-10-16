@@ -55,12 +55,12 @@ import raidAnimData from './assets/lottie/radar.json';
     follow:{
       code:'ARR', figure:function(){ return '01'; }, unit:function(){ return 'pax'; },
       line:function(){ return 'vient d\u2019embarquer'; },
-      hold:4200
+      hold:11760
     },
     sub:{
       code:'CLS', figure:function(e){ return pad(e.tier || 1); }, unit:function(){ return 'tier'; },
       line:function(){ return 'rejoint l\u2019\u00E9quipage'; },
-      hold:5200
+      hold:5000
     },
     gift:{
       code:'GFT', figure:function(e){ return pad(e.count || 1); },
@@ -69,17 +69,17 @@ import raidAnimData from './assets/lottie/radar.json';
         var c = e.count || 1;
         return 'offre ' + c + ' abonnement' + (c > 1 ? 's' : '') + '.';
       },
-      hold:5400
+      hold:12764
     },
     bits:{
       code:'FUEL', figure:function(e){ return e.amount || 100; }, unit:function(){ return 'bits'; },
       line:function(){ return 'fait le plein de kérosène'; },
-      hold:5000
+      hold:3250
     },
     raid:{
       code:'FMN', figure:function(e){ return e.viewers || 10; }, unit:function(){ return 'pax'; },
       line:function(){ return 'Rejoint la formation'; },
-      hold:5400
+      hold:7908
     }
   };
 
