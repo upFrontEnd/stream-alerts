@@ -2,105 +2,160 @@
    CHARTE — couleurs de la chaîne
 ================================================================== */
 .bug{
-  --ink:#101a24;             /* texte sur le coupon blanc */
-  --dim:#51606d;
+  --ink:#daeeff;
+  --dim:rgba(218,238,255,.5);
 
   position:relative;
   display:flex;
   align-items:stretch;
   width:min(780px,94vw);
   visibility:hidden;
-  border-radius:10px;
+  border-radius:3px;
   opacity:0;
-  transform:translateY(14px) scale(.97);
-  filter:drop-shadow(0 10px 26px rgba(0,10,20,.5));
+  transform:translateX(18px) scale(.98);
+  filter:drop-shadow(0 8px 36px rgba(0,0,0,.9));
   transition:opacity .38s cubic-bezier(.22,.85,.32,1),
              transform .38s cubic-bezier(.22,.85,.32,1);
 }
 .bug.is-live{visibility:visible}
-.bug.is-in{opacity:1;transform:translateY(0) scale(1)}
-.bug.is-out{opacity:0;transform:translateY(-10px) scale(.97)}
+.bug.is-in{opacity:1;transform:translateX(0) scale(1)}
+.bug.is-out{opacity:0;transform:translateX(-10px) scale(.97)}
 
-/* couleur maison par type : bande, souche, pseudo */
-.bug[data-type="follow"]{--name:#009fe3} /* FOLLOWER */
-.bug[data-type="sub"]   {--name:#00b132} /* SUB */
-.bug[data-type="gift"]  {--name:#5e008a} /* HOST */
-.bug[data-type="bits"]  {--name:#db4798} /* DONS */
-.bug[data-type="raid"]  {--name:#ff9000} /* RAID */
+/* couleur par type : accent, labels, valeurs */
+.bug[data-type="follow"]{--name:#00d4ff;--nr:0,212,255}
+.bug[data-type="sub"]   {--name:#00e87a;--nr:0,232,122}
+.bug[data-type="gift"]  {--name:#c060ff;--nr:192,96,255}
+.bug[data-type="bits"]  {--name:#ff4db8;--nr:255,77,184}
+.bug[data-type="raid"]  {--name:#ff9200;--nr:255,146,0}
 
 /* ------------------------------------------------------------------
-   Bande de couleur, bord gauche
+   Brackets de visée HUD — coins
+------------------------------------------------------------------ */
+.bug__corner{
+  position:absolute;
+  width:14px;
+  height:14px;
+  border:1.5px solid var(--name);
+  pointer-events:none;
+  z-index:3;
+  opacity:0;
+}
+.bug__corner--tl{top:-1px;left:-1px;border-right:none;border-bottom:none;border-radius:2px 0 0 0}
+.bug__corner--tr{top:-1px;right:-1px;border-left:none;border-bottom:none;border-radius:0 2px 0 0}
+.bug__corner--bl{bottom:-1px;left:-1px;border-right:none;border-top:none;border-radius:0 0 0 2px}
+.bug__corner--br{bottom:-1px;right:-1px;border-left:none;border-top:none;border-radius:0 0 2px 0}
+
+/* ------------------------------------------------------------------
+   Bande d'accent, bord gauche — ligne lumineuse
 ------------------------------------------------------------------ */
 .bug__accent{
   flex:0 0 auto;
-  width:10px;
+  width:4px;
   background:var(--name);
-  border-radius:10px 0 0 10px;
+  border-radius:3px 0 0 3px;
+  box-shadow:0 0 10px 2px var(--name),
+             0 0 28px 6px rgba(var(--nr),.4);
+  position:relative;
+  z-index:1;
 }
 
 /* ------------------------------------------------------------------
-   Coupon principal
+   Coupon principal — fond cockpit sombre
 ------------------------------------------------------------------ */
 .bug__coupon{
   position:relative;
   flex:1 1 auto;
   display:flex;
   align-items:center;
-  gap:22px;
+  gap:20px;
   min-width:0;
-  padding:10px;
-  background:
-    linear-gradient(90deg,#fff 0%,#fff 55%,rgba(255,255,255,0) 100%),
-    url('../assets/img/Template-Alerte.png') right center / cover no-repeat,
-    #ffffff;
+  padding:12px 16px;
+  background:#07101c;
   color:var(--ink);
   overflow:hidden;
 }
-/* balayage */
+
+/* grille HUD fine */
+.bug__coupon::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(var(--nr),.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(var(--nr),.055) 1px,transparent 1px);
+  background-size:28px 28px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* balayage laser à l'entrée */
 .bug__coupon::after{
   content:"";
   position:absolute;
-  inset:0 auto 0 -40%;
-  width:30%;
-  background:linear-gradient(100deg,transparent,rgba(180,225,255,.16),transparent);
+  top:0;bottom:0;left:-4px;
+  width:3px;
+  background:linear-gradient(180deg,transparent,var(--name),transparent);
   opacity:0;
+  z-index:2;
+  pointer-events:none;
 }
 
-/* visuel animé du type d'événement (vide pour les types sans animation) */
+/* visuel animé du type d'événement */
 .bug__icon{
   flex:0 0 auto;
   align-self:stretch;
-  width: 88px;
-  padding-right: 7px;
+  width:80px;
+  padding-right:0;
   display:flex;
   align-items:center;
   justify-content:center;
-  border-right:1.5px dashed rgba(16,26,36,.28);
+  border-right:1px solid rgba(var(--nr),.2);
+  position:relative;
+  z-index:1;
+}
+/* halo de couleur derrière l'icône */
+.bug__icon::before{
+  content:"";
+  position:absolute;
+  inset:15% 8%;
+  background:radial-gradient(ellipse at center,rgba(var(--nr),.18) 0%,transparent 68%);
+  pointer-events:none;
 }
 .bug__icon svg{width:100%;height:100%}
 
-.bug__pax{flex:1 1 auto;min-width:0;position:relative}
+.bug__pax{flex:1 1 auto;min-width:0;position:relative;z-index:1}
 
-/* nom en volets d'affichage, couleur par type via --name (voir CHARTE) */
+/* nom — blanc pur, soulignement couleur */
 .bug__name{
   position:relative;
   margin:0;
-  font-size:clamp(28px,4.4vw,40px);
+  font-size:clamp(27px,4.3vw,39px);
   font-weight:700;
   line-height:.98;
-  letter-spacing:.012em;
+  letter-spacing:.055em;
   text-transform:uppercase;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:clip;
-  color:var(--name, inherit);
+  color:#fff;
+}
+.bug__name::after{
+  content:"";
+  display:block;
+  height:1.5px;
+  margin-top:5px;
+  background:linear-gradient(90deg,var(--name) 0%,transparent 75%);
+  opacity:.65;
 }
 .bug__name .ch{display:inline-block;transform-origin:50% 52%}
 
 .bug__line{
-  margin:7px 0 0;
-  font-size:clamp(15px,1.9vw,18px);
+  margin:6px 0 0;
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-size:clamp(10px,1.35vw,12px);
   font-weight:500;
+  letter-spacing:.15em;
+  text-transform:uppercase;
   color:var(--dim);
   white-space:nowrap;
   overflow:hidden;
@@ -110,88 +165,110 @@
   display:block;
   margin-top:5px;
   max-width:46ch;
-  font-size:14px;
-  font-weight:500;
-  color:var(--dim);
+  font-family:'IBM Plex Mono',ui-monospace,monospace;
+  font-size:10.5px;
+  letter-spacing:.07em;
+  color:rgba(218,238,255,.3);
   white-space:normal;
 }
 .bug__note:empty{display:none}
 
 /* ------------------------------------------------------------------
-   Souche, bord droit
+   Souche, bord droit — dark, valeurs lumineuses
 ------------------------------------------------------------------ */
 .bug__stub{
   position:relative;
   flex:0 0 auto;
-  width:118px;
+  width:112px;
   display:flex;
   flex-direction:column;
   justify-content:center;
   gap:10px;
-  padding:16px 16px 16px 20px;
-  background:var(--name);
-  border-radius:0 10px 10px 0;
-  border-left:2px dashed rgba(255,255,255,.55);
+  padding:16px 14px 16px 16px;
+  background:#050c14;
+  border-radius:0 3px 3px 0;
+  border-left:1px solid rgba(var(--nr),.22);
+  overflow:hidden;
 }
+/* halo de couleur en haut à droite */
+.bug__stub::before{
+  content:"";
+  position:absolute;
+  top:-10%;right:-10%;
+  width:70%;height:70%;
+  background:radial-gradient(ellipse at top right,rgba(var(--nr),.22) 0%,transparent 65%);
+  pointer-events:none;
+}
+
 .bug__seat{display:grid;gap:2px}
+
 .bug__label{
   font-family:'IBM Plex Mono',ui-monospace,monospace;
-  font-size:9.5px;
+  font-size:8px;
   font-weight:700;
-  letter-spacing:.14em;
-  color:rgba(255,255,255,.65);
+  letter-spacing:.2em;
+  color:rgba(var(--nr),.65);
   text-transform:uppercase;
 }
 .bug__value{
   font-family:'IBM Plex Mono',ui-monospace,monospace;
-  font-size:17px;
+  font-size:20px;
   font-weight:700;
-  color:#fff;
+  color:var(--name);
   font-variant-numeric:tabular-nums;
+  text-shadow:0 0 10px rgba(var(--nr),.7),
+              0 0 22px rgba(var(--nr),.35);
 }
 .bug__barcode{
-  height:26px;
+  height:18px;
   background:repeating-linear-gradient(
     90deg,
-    rgba(255,255,255,.92) 0 2px,
-    transparent 2px 4px,
-    rgba(255,255,255,.92) 4px 5px,
-    transparent 5px 6px,
-    rgba(255,255,255,.92) 6px 9px,
-    transparent 9px 11px,
-    rgba(255,255,255,.92) 11px 12px,
-    transparent 12px 15px
+    rgba(var(--nr),.5) 0 1.5px,
+    transparent 1.5px 3px,
+    rgba(var(--nr),.5) 3px 4px,
+    transparent 4px 5.5px,
+    rgba(var(--nr),.5) 5.5px 7.5px,
+    transparent 7.5px 9px
   );
 }
 .bug__flightno{
   font-family:'IBM Plex Mono',ui-monospace,monospace;
-  font-size:10px;
+  font-size:9px;
   font-weight:600;
-  letter-spacing:.08em;
-  color:rgba(255,255,255,.75);
+  letter-spacing:.14em;
+  color:rgba(var(--nr),.5);
+  text-transform:uppercase;
 }
 
 /* ------------------------------------------------------------------
-   Séquence — la carte entre/sort d'un seul mouvement fluide (voir la
-   transition sur .bug ci-dessus) ; ces détails suivent en douceur.
+   Séquence — entrée/sortie
 ------------------------------------------------------------------ */
-.bug.is-in .bug__coupon::after{animation:sheen 660ms ease-out 160ms forwards}
-.bug.is-in .bug__name .ch{animation:flap 380ms cubic-bezier(.2,.85,.25,1) backwards;animation-delay:calc(120ms + var(--i) * 26ms)}
-.bug.is-in .bug__line{animation:riseIn 300ms cubic-bezier(.2,.8,.25,1) 300ms backwards}
+.bug.is-in .bug__coupon::after{animation:scanLine 580ms ease-out 80ms forwards}
+.bug.is-in .bug__name .ch{animation:flap 340ms cubic-bezier(.2,.85,.25,1) backwards;animation-delay:calc(110ms + var(--i) * 22ms)}
+.bug.is-in .bug__line{animation:riseIn 280ms cubic-bezier(.2,.8,.25,1) 290ms backwards}
+.bug.is-in .bug__corner{animation:cornerIn 260ms ease-out backwards}
+.bug.is-in .bug__corner--tl{animation-delay:0ms}
+.bug.is-in .bug__corner--tr{animation-delay:55ms}
+.bug.is-in .bug__corner--bl{animation-delay:28ms}
+.bug.is-in .bug__corner--br{animation-delay:83ms}
 
-@keyframes sheen{
-  0%{opacity:0;transform:translateX(0)}
-  15%{opacity:1}
-  100%{opacity:0;transform:translateX(500%)}
+@keyframes scanLine{
+  0%  {opacity:0;transform:translateX(0)}
+  12% {opacity:.9}
+  100%{opacity:0;transform:translateX(640px)}
 }
 @keyframes flap{
-  0%{transform:rotateX(-94deg);color:#333}
-  52%{color:#333}
-  100%{transform:rotateX(0);color:inherit}
+  0%  {transform:rotateX(-90deg);opacity:0}
+  38% {opacity:1}
+  100%{transform:rotateX(0);opacity:1}
 }
 @keyframes riseIn{
-  from{opacity:0;transform:translateY(9px)}
-  to{opacity:1;transform:translateY(0)}
+  from{opacity:0;transform:translateY(8px)}
+  to  {opacity:1;transform:translateY(0)}
+}
+@keyframes cornerIn{
+  from{opacity:0;transform:scale(.6)}
+  to  {opacity:1;transform:scale(1)}
 }
 
 @media (prefers-reduced-motion:reduce){
@@ -199,17 +276,17 @@
   .bug.is-in .bug__name .ch,
   .bug.is-in .bug__line,
   .bug.is-in .bug__coupon::after{animation:none !important;opacity:1;transform:none}
+  .bug.is-in .bug__corner{animation:none !important;opacity:1}
 }
 
 /* ------------------------------------------------------------------
-   Mode dev — gèle l'alerte, aucune animation, pour valider le rendu
-   statique avant de préciser des instructions de charte/copy.
+   Mode dev — gèle l'alerte pour valider la charte statique
 ------------------------------------------------------------------ */
 html[data-dev="1"] .bug{transition:none}
 html[data-dev="1"] .bug.is-in .bug__name .ch{
   animation:none !important;
   transform:none;
-  color:inherit;
+  opacity:1;
 }
 html[data-dev="1"] .bug.is-in .bug__line{
   animation:none !important;
@@ -219,4 +296,8 @@ html[data-dev="1"] .bug.is-in .bug__line{
 html[data-dev="1"] .bug__coupon::after{
   animation:none !important;
   opacity:0 !important;
+}
+html[data-dev="1"] .bug.is-in .bug__corner{
+  animation:none !important;
+  opacity:1;
 }
