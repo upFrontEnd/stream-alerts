@@ -4,7 +4,7 @@
 .bug{
   --paper:#fdfdfa;           /* papier du coupon */
   --ink:#131b24;             /* texte sur le papier */
-  --dim:#64737f;             /* texte secondaire */
+  --dim:#54626e;             /* texte secondaire */
 
   position:relative;
   display:flex;
@@ -144,25 +144,37 @@
 .bug__name .ch{display:inline-block;transform-origin:50% 52%}
 
 .bug__line{
-  margin:6px 0 0;
-  font-size:clamp(14px,1.8vw,17px);
+  margin:7px 0 0;
+  font-size:clamp(16px,2.1vw,20px);
   font-weight:500;
   color:var(--dim);
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
 }
+/* cartouche du message laissé par le viewer */
 .bug__note{
-  display:block;
-  margin-top:4px;
-  max-width:44ch;
-  font-size:13px;
+  display:inline-block;
+  margin-top:9px;
+  max-width:42ch;
+  padding:6px 12px 7px;
+  border-radius:4px;
+  border-left:3px solid var(--name);
+  background:color-mix(in srgb, var(--name) 11%, #fff);
+  font-size:15px;
   font-weight:500;
-  color:var(--dim);
-  opacity:.82;
+  line-height:1.35;
+  color:var(--ink);
   white-space:normal;
 }
 .bug__note:empty{display:none}
+
+/* nombres mis en valeur dans les mentions */
+.bug__num{
+  font-weight:700;
+  color:var(--name);
+  font-variant-numeric:tabular-nums;
+}
 
 /* ------------------------------------------------------------------
    Tampon — s'abat sur le coupon à l'entrée de l'alerte

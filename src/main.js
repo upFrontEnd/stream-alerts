@@ -16,6 +16,16 @@ import { initTwitch } from './twitch.js';
 
   function pad(n){ n = Number(n) || 0; return n < 10 ? '0' + n : String(n); }
 
+  /* Met les nombres en valeur dans les mentions. Le texte peut venir de
+     Twitch (message du viewer), donc on échappe avant d'injecter du HTML ;
+     les entités produites ne contiennent aucun chiffre, l'ordre est sûr. */
+  var ESCAPES = { '&':'&amp;', '<':'&lt;', '>':'&gt;' };
+  function withNumbers(text){
+    return String(text == null ? '' : text)
+      .replace(/[&<>]/g, function(c){ return ESCAPES[c]; })
+      .replace(/\d+/g, '<span class="bug__num">$&</span>');
+  }
+
   /* ================================================================
      CHARTE — textes et codes par type d'événement
   ================================================================ */
@@ -110,8 +120,8 @@ import { initTwitch } from './twitch.js';
     codeEl.textContent = cfg.code;
     figure.textContent = cfg.figure(evt);
     unit.textContent   = cfg.unit(evt);
-    lineEl.textContent = cfg.line(evt);
-    noteEl.textContent = evt.message || '';
+    lineEl.innerHTML = withNumbers(cfg.line(evt));
+    noteEl.innerHTML = withNumbers((evt.message || '').trim());
     setName(evt.user || 'anonyme');
 
     bug.classList.remove('is-in','is-out');

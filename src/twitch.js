@@ -130,6 +130,7 @@ function _dispatch(type, ev, push) {
         type: 'bits',
         user: ev.is_anonymous ? 'Anonyme' : ev.user_name,
         amount: ev.bits,
+        message: _cheerText(ev.message),
       });
       break;
 
@@ -141,4 +142,14 @@ function _dispatch(type, ev, push) {
 
 function _tier(raw) {
   return Math.round(Number(raw) / 1000) || 1;
+}
+
+/* Le message d'un cheer contient les codes de cheermotes mêlés au texte
+   ("Cheer100 bravo ! uni500"). On retire ces jetons mot+nombre pour ne
+   garder que ce que le viewer a réellement écrit. */
+function _cheerText(raw) {
+  return String(raw || '')
+    .replace(/\b[A-Za-z]+\d+\b/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
