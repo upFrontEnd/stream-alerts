@@ -21,12 +21,31 @@
 .bug.is-in{opacity:1;transform:translateY(0) scale(1)}
 .bug.is-out{opacity:0;transform:translateY(-10px) scale(.97)}
 
-/* couleur maison par type : bandeau, souche, pseudo */
-.bug[data-type="follow"]{--name:#0a84c4} /* FOLLOWER */
-.bug[data-type="sub"]   {--name:#128a3c} /* SUB */
-.bug[data-type="gift"]  {--name:#6b2d8f} /* GIFT */
-.bug[data-type="bits"]  {--name:#c2317e} /* BITS */
-.bug[data-type="raid"]  {--name:#d97400} /* RAID */
+/* couleur maison par type.
+   --name : teinte pleine (texte, filets, cartouche)
+   --grad : dégradé des aplats (bandeau, souche), même construction que le
+            chevron .info-tag de l'overlay : reflet en haut, teinte pleine
+            à 55 %, ombre en bas. */
+.bug[data-type="follow"]{ /* FOLLOWER — dégradé exact de l'overlay */
+  --name:#009fe3;
+  --grad:linear-gradient(180deg,#49bdf1 0%,#14abe9 24%,#009fe3 55%,#0089c7 100%);
+}
+.bug[data-type="sub"]{
+  --name:#128a3c;
+  --grad:linear-gradient(180deg,#4cc47a 0%,#25a455 24%,#128a3c 55%,#0b6e2e 100%);
+}
+.bug[data-type="gift"]{
+  --name:#6b2d8f;
+  --grad:linear-gradient(180deg,#a768c6 0%,#82419f 24%,#6b2d8f 55%,#52206f 100%);
+}
+.bug[data-type="bits"]{
+  --name:#c2317e;
+  --grad:linear-gradient(180deg,#ee77b3 0%,#d8479a 24%,#c2317e 55%,#9e2263 100%);
+}
+.bug[data-type="raid"]{
+  --name:#d97400;
+  --grad:linear-gradient(180deg,#ffb04d 0%,#f08c1a 24%,#d97400 55%,#b05c00 100%);
+}
 
 /* ------------------------------------------------------------------
    Coupon principal — le volet que le passager garde
@@ -65,7 +84,9 @@
   justify-content:space-between;
   gap:16px;
   padding:11px 20px;
-  background:var(--name);
+  background:var(--grad);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),
+             inset 0 -2px 0 rgba(0,0,0,.1);
   color:#fff;
 }
 .bug__airline{
@@ -240,7 +261,9 @@
   justify-content:center;
   gap:13px;
   padding:18px 18px;
-  background:var(--name);
+  background:var(--grad);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),
+             inset 0 -2px 0 rgba(0,0,0,.1);
   border-radius:0 9px 9px 0;
   /* perforation : tirets blancs, intervalles dans la couleur du billet */
   border-left:2px dashed rgba(255,255,255,.92);
