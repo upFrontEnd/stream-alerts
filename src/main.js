@@ -1,11 +1,5 @@
 import './styles/main.scss';
-import lottie from 'lottie-web';
 import { initTwitch } from './twitch.js';
-import followAnimData from './assets/lottie/plus.json';
-import subAnimData from './assets/lottie/check.json';
-import giftAnimData from './assets/lottie/gifting.json';
-import bitsAnimData from './assets/lottie/shining.json';
-import raidAnimData from './assets/lottie/radar.json';
 
 (function(){
   'use strict';
@@ -17,34 +11,8 @@ import raidAnimData from './assets/lottie/radar.json';
   var nameEl = document.getElementById('name');
   var lineEl = document.getElementById('line');
   var noteEl = document.getElementById('note');
-  var iconEl = document.getElementById('icon');
-
-  /* --- visuel animé du bloc bug__icon, par type --------------- */
-  /* segment : ne joue que le marqueur "in-reveal" du fichier, pas les
-     segments hover/morph qui suivent dans la même timeline */
-  var ICON_ANIMS = {
-    follow:{ data:followAnimData, segment:[0, 100] },
-    sub:{ data:subAnimData },
-    gift:{ data:giftAnimData },
-    bits:{ data:bitsAnimData },
-    raid:{ data:raidAnimData, loop:true } /* balayage continu tant que l'alerte est affichée */
-  };
-  var iconAnim = null;
-  function setIcon(type){
-    if (iconAnim){ iconAnim.destroy(); iconAnim = null; }
-    iconEl.innerHTML = '';
-    var cfg = ICON_ANIMS[type];
-    if (!cfg) return;
-    iconAnim = lottie.loadAnimation({
-      container: iconEl,
-      renderer: 'svg',
-      loop: !!cfg.loop,
-      autoplay: true,
-      animationData: cfg.data,
-      initialSegment: cfg.segment,
-      rendererSettings: { preserveAspectRatio: 'xMidYMid meet' }
-    });
-  }
+  var kindEl = document.getElementById('kind');
+  var stampEl = document.getElementById('stamp');
 
   function pad(n){ n = Number(n) || 0; return n < 10 ? '0' + n : String(n); }
 
@@ -53,16 +21,19 @@ import raidAnimData from './assets/lottie/radar.json';
   ================================================================ */
   var TYPES = {
     follow:{
+      label:'Nouveau follow', stamp:'Welcome',
       code:'ARR', figure:function(){ return '01'; }, unit:function(){ return 'pax'; },
       line:function(){ return 'vient d\u2019embarquer'; },
       hold:11760
     },
     sub:{
+      label:'Abonnement', stamp:'À bord !',
       code:'CLS', figure:function(e){ return pad(e.tier || 1); }, unit:function(){ return 'tier'; },
       line:function(){ return 'rejoint l\u2019\u00E9quipage'; },
       hold:5000
     },
     gift:{
+      label:'Subs offerts', stamp:'Excellence !',
       code:'GFT', figure:function(e){ return pad(e.count || 1); },
       unit:function(e){ return (e.count || 1) > 1 ? 'places' : 'place'; },
       line:function(e){
@@ -72,11 +43,13 @@ import raidAnimData from './assets/lottie/radar.json';
       hold:12764
     },
     bits:{
+      label:'Bits', stamp:'Merci !',
       code:'FUEL', figure:function(e){ return e.amount || 100; }, unit:function(){ return 'bits'; },
       line:function(){ return 'fait le plein de kérosène'; },
       hold:3250
     },
     raid:{
+      label:'Raid', stamp:'Bienvenue !',
       code:'FMN', figure:function(e){ return e.viewers || 10; }, unit:function(){ return 'pax'; },
       line:function(){ return 'Rejoint la formation'; },
       hold:7908
@@ -132,13 +105,14 @@ import raidAnimData from './assets/lottie/radar.json';
     var hold = evt.hold || cfg.hold;
 
     bug.dataset.type = evt.type;
+    kindEl.textContent = cfg.label;
+    stampEl.textContent = cfg.stamp;
     codeEl.textContent = cfg.code;
     figure.textContent = cfg.figure(evt);
     unit.textContent   = cfg.unit(evt);
     lineEl.textContent = cfg.line(evt);
     noteEl.textContent = evt.message || '';
     setName(evt.user || 'anonyme');
-    setIcon(evt.type);
 
     bug.classList.remove('is-in','is-out');
     void bug.offsetWidth;
