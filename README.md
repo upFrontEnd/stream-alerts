@@ -1,18 +1,25 @@
 # Alertes SkyflyerAviation
 
-Overlay d'alertes Twitch. Projet Bun + Vite, HTML/SCSS/JS vanilla (pas de framework, pas de TypeScript).
+Overlay d'alertes Twitch sous forme de carte d'embarquement.
+Stack : Bun + Vite + Vue 3 (Composition API), SCSS, pas de TypeScript.
 Deux polices Google Fonts (Barlow Condensed, IBM Plex Mono), tout le reste est local.
 
-## Fichiers
+## Structure
 
-| Fichier | Rôle |
-| --- | --- |
-| `index.html` | Structure du bandeau + panneau de test |
-| `src/styles/main.scss` | Point d'entrée, importe les fichiers ci-dessous |
-| `src/styles/_base.scss` | Reset, tokens `--ui-*`, thème clair/sombre, `body` |
-| `src/styles/_bug.scss` | Composant d'alerte `.bug` : charte, structure, séquence |
-| `src/styles/_panel.scss` | Aperçu + panneau de test (absents en mode OBS) |
-| `src/main.js` | Catalogue d'événements, file d'attente, son, panneau de test |
+```
+src/
+├── config/alertTypes.js        — types d'événements, textes, durées, sampleEvent()
+├── composables/useAlertSound.js — Web Audio : carillon synthétisé + fichiers custom
+├── components/AlertCard.vue    — carte .bug avec animations CSS
+├── components/TestPanel.vue    — panneau de test (masqué en mode OBS)
+├── App.vue                     — file d'attente, clavier, init Twitch
+├── main.js                     — point d'entrée Vue
+├── twitch.js                   — connexion EventSub WebSocket
+└── styles/
+    ├── _base.scss              — reset, tokens --ui-*, thème clair/sombre
+    ├── _bug.scss               — composant .bug : couleurs, structure, animations
+    └── _panel.scss             — aperçu + panneau (absents en mode OBS)
+```
 
 ## Développer
 
@@ -20,114 +27,103 @@ Deux polices Google Fonts (Barlow Condensed, IBM Plex Mono), tout le reste est l
 bun install
 bun run dev       # serveur de dev Vite
 bun run build     # build de prod dans dist/
-bun run preview   # sert le build de dist/
+bun run preview   # sert le build depuis dist/
 ```
 
 ## Utiliser dans OBS
 
-Après `bun run build`, dans OBS : source navigateur, fichier local `dist/index.html`,
-cocher « fichier local », puis ajouter `?clean=1` n'est pas possible sur un fichier local,
-donc passer plutôt par `file:///chemin/dist/index.html?clean=1` dans le champ URL,
-ou forcer le mode propre en remplaçant `data-mode="demo"` par `data-mode="clean"`
-sur la balise `<html>`.
-Taille conseillée : 820 × 270.
+Après `bun run build`, dans OBS : source navigateur, fichier local `dist/index.html`.
+Pour le fond transparent et le panneau masqué, passer par l'URL complète :
 
-## Tester les alertes depuis OBS
+```
+file:///chemin/vers/dist/index.html?clean=1
+```
 
-Dans OBS, clic droit sur la Browser Source → **Interact**, puis clique dans la fenêtre pour la focus.
+Taille conseillée : **820 × 270**.
 
-| Touche | Alerte déclenchée |
+## Tester depuis OBS
+
+Dans OBS, clic droit sur la Browser Source → **Interact**, puis clic dans la fenêtre pour la focus.
+
+| Touche | Alerte |
 | --- | --- |
 | `F` | Follow |
-| `S` | Abonnement (sub) |
-| `G` | Subs offerts (gift) |
+| `S` | Abonnement |
+| `G` | Subs offerts |
 | `B` | Bits |
 | `R` | Raid |
 
-Ces raccourcis fonctionnent avec ou sans `?clean=1`.
-
 ## Mode dev
 
-URL suivie de `?dev=1`, ou bouton « Mode dev » du panneau : l'alerte apparaît
-instantanément, figée, sans aucune animation (bandeau, volets, balayage,
-ligne de piste), et reste affichée jusqu'au prochain déclenchement au lieu
-de disparaître après `hold`. Sert à valider le rendu statique (couleurs,
-textes, mise en page) avant de donner des instructions de retouche précises.
+URL avec `?dev=1`, ou bouton « Mode dev » du panneau : l'alerte apparaît instantanément,
+figée, sans animation, et reste affichée indéfiniment. Sert à valider le rendu statique
+(couleurs, textes, mise en page) avant de retoucher la charte.
 
 ## Personnaliser
 
-Deux points d'entrée, tous les deux marqués `CHARTE` dans le code.
+### Couleurs — `src/styles/_bug.scss`
 
-**Couleurs** dans `src/styles/_bug.scss`, sur le sélecteur `.bug` :
+Couleur d'encre du coupon (haut du fichier, bloc `CHARTE`) :
 
 ```css
---ink: #101a24;  /* texte principal, coupon blanc */
---dim: #51606d;  /* texte secondaire (bug__line, bug__note) */
+--ink: #101a24;  /* texte principal */
+--dim: #51606d;  /* texte secondaire */
 ```
 
-Une couleur par type juste en dessous, sur `.bug[data-type="..."]`, dans `--name` :
-utilisée pour la bande de gauche, la souche et le pseudo (`bug__name`) :
+Couleur par type via `--name` (teinte pleine) et `--grad` (dégradé bandeau + souche) :
 
-| Type (clé) | Libellé | `--name` |
-| --- | --- | --- |
-| `follow` | FOLLOWER | `#009fe3` |
-| `sub` | SUB | `#00b132` |
-| `gift` | HOST | `#5e008a` |
-| `bits` | DONS | `#db4798` |
-| `raid` | RAID | `#ff9000` |
+| Type | `--name` |
+| --- | --- |
+| `follow` | `#009fe3` |
+| `sub` | `#128a3c` |
+| `gift` | `#6b2d8f` |
+| `bits` | `#c2317e` |
+| `raid` | `#d97400` |
 
-**Textes et codes** dans `src/main.js`, objet `TYPES`. Chaque type définit
-`code` (3 ou 4 lettres du bloc gauche), `figure`, `unit`, `line` et `hold`
-(durée d'affichage en ms).
+### Textes et codes — `src/config/alertTypes.js`
 
-**Son** : dépose un fichier `src/assets/sound/<type>.mp3`, `.ogg` ou `.wav`
-(ex. `src/assets/sound/follow.mp3`, `src/assets/sound/sub.wav`...) pour un son
-custom sur ce type d'alerte. Si le fichier
-est absent, `chime()` bascule automatiquement sur le carillon synthétisé
-(`synthChime()` dans `src/main.js`, objet `MOTIF` : liste de fréquences par
-type, jouées en sinus) — donc rien ne casse tant que tous les sons ne sont
-pas fournis.
+Objet `TYPES` — chaque type définit `label`, `stamp`, `code`, `figure`, `unit`, `line` et `hold` (durée d'affichage en ms).
 
-**Volume homogène** : chaque fichier custom est décodé une fois au chargement
-(Web Audio API), son pic d'amplitude mesuré, puis rejoué avec un gain qui
-ramène ce pic au même niveau que le carillon synthétisé (`TARGET_PEAK` dans
-`src/main.js`). Peu importe le volume d'origine de chaque fichier téléchargé,
-toutes les alertes sortent à un niveau sonore comparable.
+### Sons — `src/assets/sound/`
 
-## Brancher les vrais événements
+Dépose un fichier `<type>.mp3`, `.ogg` ou `.wav` (ex. `follow.mp3`, `sub.wav`) pour remplacer le carillon synthétisé de ce type. Si le fichier est absent, le carillon de cabine synthétisé prend le relais — rien ne casse.
+
+Chaque fichier custom est décodé une fois au chargement et son pic normalisé pour sortir au même volume que le carillon synthétisé (`TARGET_PEAK` dans `useAlertSound.js`).
+
+## Déclencher une alerte depuis le code
 
 ```js
 Alerts.push({ type: 'follow', user: 'pseudo' });
-Alerts.push({ type: 'sub',    user: 'pseudo', tier: 2, months: 14, prime: false });
+Alerts.push({ type: 'sub',    user: 'pseudo', tier: 2, months: 14 });
 Alerts.push({ type: 'gift',   user: 'pseudo', count: 10, tier: 1 });
 Alerts.push({ type: 'bits',   user: 'pseudo', amount: 500, message: 'gg' });
 Alerts.push({ type: 'raid',   user: 'pseudo', viewers: 34 });
 ```
 
-`Alerts.push` empile : deux événements simultanés s'affichent l'un après l'autre.
+Les appels s'empilent et s'affichent l'un après l'autre.
 Champs communs : `user`, `message` (optionnel), `hold` (optionnel, écrase la durée du type).
 
-Côté Twitch, écouter EventSub en WebSocket sur `wss://eventsub.wss.twitch.tv/ws`
-et mapper les notifications vers ces appels :
+## Connexion Twitch
+
+`src/twitch.js` lit le token OAuth dans `?token=` (ou `localStorage`) et ouvre un WebSocket EventSub. Correspondance des abonnements :
 
 | Abonnement EventSub | Type |
 | --- | --- |
 | `channel.follow` | `follow` |
-| `channel.subscribe` et `channel.subscription.message` | `sub` |
+| `channel.subscribe` + `channel.subscription.message` | `sub` |
 | `channel.subscription.gift` | `gift` |
 | `channel.cheer` | `bits` |
 | `channel.raid` | `raid` |
 
-## Séquence d'animation
+## Animations
 
-La carte entre et sort d'un seul mouvement (fondu + léger décalage/zoom), via
-une transition CSS sur `.bug` (voir `src/styles/_bug.scss`, juste après le
-bloc `CHARTE`) — pas de découpe par élément. Quelques détails suivent en
-douceur par-dessus :
+La carte entre et sort via une transition CSS sur `.bug` (fondu + léger décalage/zoom).
+Quelques détails suivent par-dessus :
 
-1. `flap` par caractère à 120 ms, décalage de 26 ms, les volets du pseudo tombent
-2. `riseIn` 300 ms à 300 ms, la phrase (`bug__line`)
-3. `sheen` 660 ms à 160 ms, le balayage lumineux sur le coupon
+1. **Volets du pseudo** — chaque lettre jaillit du bas, décalage de 34 ms entre chaque
+2. **Ligne d'action** — `riseIn` 300 ms, déclenché à 300 ms
+3. **Tampon** — `stampIn` 520 ms, déclenché à 400 ms
+4. **Balayage lumineux** — `sheen` 660 ms, déclenché à 160 ms
+5. **Éclat tournant** — `letterGlint` en boucle sur le pseudo (7 s, pause longue)
 
-`prefers-reduced-motion` supprime le décalage/zoom (garde un simple fondu) et
-les détails ci-dessus.
+`prefers-reduced-motion` remplace tout cela par un simple fondu.
