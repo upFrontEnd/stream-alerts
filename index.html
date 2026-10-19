@@ -9,73 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-<div class="wrap">
-  <div class="scene" id="scene" data-bg="cockpit">
-    <div class="stage">
-      <div class="bug" id="bug" data-type="follow" role="status" aria-live="polite">
-        <div class="bug__coupon">
-          <div class="bug__header">
-            <span class="bug__airline">
-              <svg class="bug__plane" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L12 19v-5.5z"/></svg>
-              <span id="kind">Nouveau follow</span>
-            </span>
-            <span class="bug__doc">Carte d'embarquement</span>
-          </div>
-
-          <div class="bug__body">
-            <div class="bug__pax">
-              <span class="bug__tag">Passager</span>
-              <p class="bug__name" id="name"></p>
-              <p class="bug__line" id="line"></p>
-              <span class="bug__note" id="note"></span>
-            </div>
-
-            <div class="bug__stampwrap" aria-hidden="true">
-              <span class="bug__stamp" id="stamp">Welcome</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="bug__stub">
-          <div class="bug__seat">
-            <span class="bug__label">Vol</span>
-            <span class="bug__flightno" id="code">ARR</span>
-          </div>
-          <div class="bug__seat">
-            <span class="bug__label" id="unit">pax</span>
-            <span class="bug__value" id="figure">01</span>
-          </div>
-          <div class="bug__barcode"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="chrome">
-    <div class="row">
-      <button class="btn" data-fire="follow">Nouveau follow</button>
-      <button class="btn" data-fire="sub">Abonnement</button>
-      <button class="btn" data-fire="gift">Subs offerts</button>
-      <button class="btn" data-fire="bits">Bits</button>
-      <button class="btn" data-fire="raid">Raid</button>
-      <span class="sep"></span>
-      <button class="btn" id="burst">Envoyer 4 alertes d'affilée</button>
-    </div>
-    <div class="row">
-      <input class="field" id="pseudo" placeholder="Pseudo à afficher" aria-label="Pseudo à afficher">
-      <button class="btn" id="bg">Fond : cockpit</button>
-      <button class="btn" id="snd" aria-pressed="true">Son : activé</button>
-      <button class="btn" id="dev" aria-pressed="false">Mode dev : désactivé</button>
-    </div>
-    <p class="hint">
-      Source navigateur dans OBS, URL suivie de <code>?clean=1</code> : fond transparent, panneau masqué. Taille conseillée 820 × 270.
-      URL suivie de <code>?dev=1</code>, ou bouton « Mode dev » : alerte figée sans animation, pour valider le rendu avant d'ajuster la charte.
-      Déclenchement depuis ton code : <code>Alerts.push({ type:'sub', user:'Nom', tier:2, months:14 })</code>.
-    </p>
-  </div>
-</div>
-
+<div id="app"></div>
 <script type="module" src="/src/main.js"></script>
 </body>
 </html>
